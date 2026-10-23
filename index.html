@@ -14,7 +14,7 @@
 </style>
 </head>
 <body>
-<header><div class="logo">🎯</div><div><h1>Dart League Scheduler</h1><p>Balanced byes · diverse opponents · seven-round nights</p></div></header>
+<header><div class="logo">🎯</div><div><h1>Dart League Scheduler</h1><p>Balanced byes · improved opponent coverage · round-robin nights</p></div></header>
 <main>
 <section class="panel"><h2>League setup</h2><div class="grid">
 <div><label for="teamCount">Teams</label><input id="teamCount" type="number" min="2" max="80" step="2" value="28"></div>
@@ -41,7 +41,7 @@ function capacity(){const c=config(),err=validate(c),active=c.days*c.boards*2,by
 function rand(n){return Math.floor(Math.random()*n)}
 function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=rand(i+1);[a[i],a[j]]=[a[j],a[i]]}return a}
 function pairings(group,boards){let circle=group.slice(),out=[];for(let r=0;r<circle.length-1;r++){const games=[];for(let i=0;i<circle.length/2;i++)games.push({a:circle[i],b:circle[circle.length-1-i],board:(i+r)%boards+1});out.push(games);circle.splice(1,0,circle.pop())}return out}
-function optimize(c,iterations=180){const n=c.teams,activeCount=c.days*c.boards*2,groupSize=c.boards*2,byesPerWeek=n-activeCount;let best=null,bestScore=Infinity;
+function optimize(c,iterations=48){const n=c.teams,activeCount=c.days*c.boards*2,groupSize=c.boards*2,byesPerWeek=n-activeCount;let best=null,bestScore=Infinity;
 for(let attempt=0;attempt<iterations;attempt++){
 const counts=Array.from({length:n},()=>new Uint16Array(n)),bye=Array(n).fill(0),lastBye=Array(n).fill(-100),night=Array.from({length:n},()=>Array(c.days).fill(0)),weekly=[];
 for(let w=0;w<c.weeks;w++){
@@ -58,6 +58,40 @@ let score=0;for(let a=0;a<n;a++){let unique=0;for(let b=a+1;b<n;b++){const x=cou
 for(let w=1;w<weekly.length;w++){const prev=new Set(weekly[w-1].byes);for(let t of weekly[w].byes)if(prev.has(t))score+=20}
 if(score<bestScore){bestScore=score;best=weekly}
 }
+// Local improvement: exchange two slots within a week (including bye slots).
+// This preserves each week's roster, all nightly round robins and total byes.
+const quality=weekly=>{
+ const pair=Array.from({length:n},()=>new Uint8Array(n)),nightUse=Array.from({length:n},()=>Array(c.days).fill(0));
+ const byeUse=Array(n).fill(0);let consecutive=0,previous=new Set();
+ for(const week of weekly){const now=new Set(week.byes);for(const t of week.byes){byeUse[t]++;if(previous.has(t))consecutive++}previous=now;
+  week.groups.forEach((g,d)=>{for(const t of g)nightUse[t][d]++;for(let i=0;i<g.length;i++)for(let j=i+1;j<g.length;j++){pair[g[i]][g[j]]++;pair[g[j]][g[i]]++}})}
+ let missing=0,repeats=0,heavy=0,nightPenalty=0,byePenalty=0;
+ for(let i=0;i<n;i++){for(let j=i+1;j<n;j++){const k=pair[i][j];if(!k)missing++;else if(k>1){repeats+=k-1;heavy+=(k-1)*(k-1)}}
+ const visits=nightUse[i],mean=visits.reduce((x,y)=>x+y,0)/c.days;
+ for(const v of visits)nightPenalty+=(v-mean)*(v-mean);
+ const ideal=byesPerWeek*c.weeks/n;byePenalty+=(byeUse[i]-ideal)**2;
+ }
+ return missing*180+heavy*12+repeats*2+nightPenalty*5+byePenalty*65+consecutive*110;
+};
+// The seed search above is useful; refine its best candidate rather than relying
+// solely on random restarts. A swap can also exchange an active team and a bye.
+let current=best.map(w=>({byes:w.byes.slice(),groups:w.groups.map(g=>g.slice())}));
+let currentScore=quality(current),champion=current.map(w=>({byes:w.byes.slice(),groups:w.groups.map(g=>g.slice())})),championScore=currentScore;
+const moves=Math.min(4500,Math.max(1000,c.weeks*c.teams*7));
+for(let step=0;step<moves;step++){
+ const w=rand(c.weeks),week=current[w],slots=[...week.groups,week.byes];
+ const first=rand(slots.length),second=rand(slots.length);if(first===second||!slots[first].length||!slots[second].length)continue;
+ const i=rand(slots[first].length),j=rand(slots[second].length);
+ [slots[first][i],slots[second][j]]=[slots[second][j],slots[first][i]];
+ const candidate=quality(current),temperature=Math.max(0.3,9*(1-step/moves));
+ if(candidate<=currentScore||Math.random()<Math.exp((currentScore-candidate)/temperature)){
+ currentScore=candidate;
+ if(candidate<championScore){championScore=candidate;champion=current.map(w=>({byes:w.byes.slice(),groups:w.groups.map(g=>g.slice())}))}
+ }else [slots[first][i],slots[second][j]]=[slots[second][j],slots[first][i]];
+ // Occasionally return to the best known state to escape unproductive regions.
+ if(step%650===649){current=champion.map(w=>({byes:w.byes.slice(),groups:w.groups.map(g=>g.slice())}));currentScore=championScore}
+}
+best=champion;
 return best.map((week,w)=>({week:w+1,byes:week.byes,nights:week.groups.map((group,d)=>({day:d,teams:group,rounds:pairings(group,c.boards)}))}))}
 function auditSchedule(schedule,c){
  const errors=[],n=c.teams, pairCounts=Array.from({length:n},()=>Array(n).fill(0)),byes=Array(n).fill(0),nightCounts=Array.from({length:n},()=>Array(c.days).fill(0)),boardCounts=Array.from({length:n},()=>Array(c.boards).fill(0));
