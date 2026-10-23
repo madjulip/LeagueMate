@@ -11,22 +11,47 @@
 .setup-date-row input{display:block;width:100%;max-width:100%;min-width:0;box-sizing:border-box}
 /* Stack the controls when the iPad viewport is too narrow for both. */
 @media(max-width:650px){.setup-date-row{grid-template-columns:minmax(0,1fr)}}
+
+.help-toggle{width:100%;text-align:left;display:flex;justify-content:space-between;align-items:center;font-size:1.1rem;padding:16px 18px}
+.help-panel{margin-top:12px;border:1px solid #e7dbf1;border-radius:12px;padding:18px;background:#faf7fe}
+.help-panel h3{margin:12px 0 6px}.help-panel ol{padding-left:24px;line-height:1.65}.help-panel li{margin-bottom:12px}.help-panel p{line-height:1.55}
+.help-panel[hidden]{display:none}.primary-action{font-size:1.1rem;padding:14px 20px}.results-intro{background:#f1eafb;border-radius:10px;padding:14px;margin-bottom:14px}
+@media print{.help-section,.actions,#generateStatus,#saveStatus{display:none!important}}
 </style>
 </head>
 <body>
 <header><div class="logo">🎯</div><div><h1>Dart League Scheduler</h1><p>Balanced byes · improved opponent coverage · round-robin nights</p></div></header>
 <main>
-<section class="panel"><h2>League setup</h2><div class="grid">
+<section class="panel help-section"><button type="button" id="helpToggle" class="help-toggle" aria-expanded="false" aria-controls="helpPanel"><span>❔ How to Use LeagueMate</span><span id="helpArrow" aria-hidden="true">Show instructions ▾</span></button>
+<div id="helpPanel" class="help-panel" hidden>
+<h2>Welcome to LeagueMate!</h2>
+<p>LeagueMate makes a dart league schedule for you. No account or installation is needed.</p>
+<ol>
+<li><strong>Enter your league information.</strong> Fill in how many teams you have, how many nights you play each week, how many dartboards are used each night, and how many weeks the season lasts.</li>
+<li><strong>Choose your playing days.</strong> Enter the season start date if you know it. In “Playing days,” type the days your league plays, separated by commas (for example: Monday, Wednesday, Thursday).</li>
+<li><strong>Enter your team names.</strong> Replace Team 1, Team 2, and so on with the actual names.</li>
+<li><strong>Click “Create My Schedule.”</strong> Wait for the schedule to appear. This may take a moment.</li>
+<li><strong>Look at your schedule.</strong> Choose a week and a night to see the teams, boards, and matches for each round. “Byes” are teams that have the week off.</li>
+<li><strong>Keep a copy.</strong> Click “Save on This Device,” then “Download a Backup Copy.” A backup helps protect your schedule if you switch devices or clear your browser data.</li>
+<li><strong>Print or share it.</strong> Use “Print or Save as PDF” for a printable copy, or “Download Schedule for Excel” for a spreadsheet.</li>
+</ol>
+<h3>Frequently asked questions</h3>
+<p><strong>Why can't I create a schedule?</strong> Each board needs two teams, and each team plays only one night per week. For example, 8 teams can play 1 night per week using 4 boards. If you have too few teams, reduce the number of nights or boards.</p>
+<p><strong>Will my schedule be here tomorrow?</strong> Saving on this device usually keeps it available in the same browser. Download a backup copy for extra protection.</p>
+<p><strong>Can I make changes?</strong> Yes. Changing league settings means you will need to create a new schedule. Download a backup first if you want to keep the old one.</p>
+<p><strong>What are “Schedule Checks” and “Opponent History”?</strong> These are optional reports. You do not need them to make or print your schedule.</p>
+</div></section>
+<section class="panel"><h2>Step 1: Set up your league</h2><div class="grid">
 <div><label for="teamCount">Teams</label><input id="teamCount" type="number" min="2" max="80" step="2" value="28"></div>
 <div><label for="days">Nights per week</label><input id="days" type="number" min="1" max="7" value="3"></div>
 <div><label for="boards">Boards per night</label><input id="boards" type="number" min="1" max="12" value="4"></div>
 <div><label for="weeks">Season weeks</label><input id="weeks" type="number" min="1" max="52" value="12"></div>
-</div><div class="setup-date-row"><div><label for="startDate">Season start date (optional)</label><input id="startDate" type="date"></div><div><label for="dayNames">Night labels (comma separated)</label><input id="dayNames" value="Monday, Wednesday, Thursday"></div></div>
-<div id="capacityNote" class="note"></div><div id="generateStatus" class="note hidden" role="status" aria-live="polite"></div><p id="saveStatus" class="muted" role="status" aria-live="polite">Unsaved changes</p><div class="actions"><button id="generate">Generate optimized season</button><button class="secondary" id="save">Save on this device</button><button class="secondary" id="exportJSON">Export backup</button><button class="secondary" id="importJSON">Import backup</button><input id="importFile" type="file" accept=".json,application/json" class="hidden"></div><p class="muted">Schedules are generated entirely on your device. Save locally or export a backup to keep your work.</p></section>
-<section class="panel"><div class="inline"><h2>Team names</h2><button class="secondary" id="resetNames" style="flex:0 0 auto">Reset names</button></div><div id="teams" class="teams"></div></section>
-<section id="results" class="hidden"><section class="panel"><h2>Season quality</h2><div id="stats" class="stats"></div><p id="fairness" class="muted"></p><div class="actions"><button class="secondary" id="csv">Export schedule CSV</button><button class="secondary" id="print">Print / Save PDF</button></div></section>
-<section class="panel"><h2>Schedule validation</h2><p id="auditStatus" class="muted">Generate a season to check its matches.</p><div id="auditDetails" class="muted"></div><div class="actions"><button class="secondary" id="runTests">Run 10 randomized tests</button></div><p id="testResults" class="muted"></p></section><section class="panel"><h2>Season schedule</h2><div class="grid two"><div><label for="weekSelect">Week</label><select id="weekSelect"></select></div><div><label for="nightSelect">Night</label><select id="nightSelect"></select></div></div><div id="nightSummary" class="note"></div><div id="rounds"></div><h3>Weekly overview</h3><div id="weekOverview"></div></section>
-<section class="panel"><h2>Opponent history</h2><p class="muted">Each number shows how many times the two teams share a night and therefore play each other. Green = once, yellow = twice, red = three or more.</p><div class="grid two"><div><label for="historyTeam">Team report</label><select id="historyTeam"></select></div><div><label for="historyThrough">Include results through</label><select id="historyThrough"></select></div></div><div id="teamReport" style="margin-top:12px"></div><h3>Full opponent matrix</h3><div id="matrix" class="scroll"></div></section></section>
+</div><div class="setup-date-row"><div><label for="startDate">Season start date (optional)</label><input id="startDate" type="date"></div><div><label for="dayNames">Playing days (separate with commas)</label><input id="dayNames" value="Monday, Wednesday, Thursday"></div></div>
+<div id="capacityNote" class="note"></div><div id="generateStatus" class="note hidden" role="status" aria-live="polite"></div><p id="saveStatus" class="muted" role="status" aria-live="polite">Unsaved changes</p><div class="actions"><button id="generate">Create My Schedule</button><button class="secondary" id="save">Save on This Device</button><button class="secondary" id="exportJSON">Download a Backup Copy</button><button class="secondary" id="importJSON">Open a Backup Copy</button><input id="importFile" type="file" accept=".json,application/json" class="hidden"></div><p class="muted">Schedules are generated entirely on your device. Save locally or export a backup to keep your work.</p></section>
+<section class="panel"><div class="inline"><h2>Step 2: Enter your team names</h2><button class="secondary" id="resetNames" style="flex:0 0 auto">Reset names</button></div><div id="teams" class="teams"></div></section>
+<section id="results" class="hidden"><div class="results-intro"><strong>Your schedule is ready!</strong> Choose a week and night below to see the matches. Remember to download a backup copy to keep it safe.</div><section class="panel"><h2>Schedule Summary</h2><div id="stats" class="stats"></div><p id="fairness" class="muted"></p><div class="actions"><button class="secondary" id="csv">Download Schedule for Excel</button><button class="secondary" id="print">Print or Save as PDF</button></div></section>
+<section class="panel"><h2>Schedule Checks (optional)</h2><p id="auditStatus" class="muted">Generate a season to check its matches.</p><div id="auditDetails" class="muted"></div><div class="actions"><button class="secondary" id="runTests">Run 10 randomized tests</button></div><p id="testResults" class="muted"></p></section><section class="panel"><h2>Step 3: View your schedule</h2><div class="grid two"><div><label for="weekSelect">Week</label><select id="weekSelect"></select></div><div><label for="nightSelect">Night</label><select id="nightSelect"></select></div></div><div id="nightSummary" class="note"></div><div id="rounds"></div><h3>Weekly overview</h3><div id="weekOverview"></div></section>
+<section class="panel"><h2>Opponent History (optional)</h2><p class="muted">Each number shows how many times the two teams share a night and therefore play each other. Green = once, yellow = twice, red = three or more.</p><div class="grid two"><div><label for="historyTeam">Team report</label><select id="historyTeam"></select></div><div><label for="historyThrough">Include results through</label><select id="historyThrough"></select></div></div><div id="teamReport" style="margin-top:12px"></div><h3>Full opponent matrix</h3><div id="matrix" class="scroll"></div></section></section>
 </main><footer>Standalone offline-capable HTML app · No account or server required</footer>
 <script>
 'use strict';
@@ -189,10 +214,10 @@ $('resetNames').addEventListener('click',()=>{names=names.map((_,i)=>`Team ${i+1
 $('generate').addEventListener('click',()=>{
  syncNames();const c=config(),error=validate(c);
  if(error){markChanged(true);showGenerateStatus('Cannot generate schedule: '+error+' Current setup: '+c.teams+' teams, '+c.days+' nights per week, '+c.boards+' boards per night.',true);$('generateStatus').scrollIntoView({behavior:'smooth',block:'center'});return}
- const button=$('generate');button.disabled=true;button.textContent='Optimizing…';showGenerateStatus('Generating '+c.weeks+' weeks for '+c.teams+' teams. Please wait…');
+ const button=$('generate');button.disabled=true;button.textContent='Creating schedule…';showGenerateStatus('Generating '+c.weeks+' weeks for '+c.teams+' teams. Please wait…');
  setTimeout(()=>{try{const candidate=optimize(c),audit=auditSchedule(candidate,c);if(!audit.valid)throw Error(audit.errors[0]);
  settings=c;season=candidate;render();save();showGenerateStatus('Schedule generated successfully: '+audit.matches+' matches across '+c.weeks+' weeks. All rounds are expanded below.');$('results').scrollIntoView({behavior:'smooth'});
- }catch(e){showGenerateStatus('Generation failed: '+e.message,true);$('generateStatus').scrollIntoView({behavior:'smooth'});}finally{button.disabled=false;button.textContent='Generate optimized season'}},40);
+ }catch(e){showGenerateStatus('Generation failed: '+e.message,true);$('generateStatus').scrollIntoView({behavior:'smooth'});}finally{button.disabled=false;button.textContent='Create My Schedule'}},40);
 });
 $('runTests').addEventListener('click',()=>{const c=config(),error=validate(c);if(error){alert(error);return}const btn=$('runTests');btn.disabled=true;btn.textContent='Testing…';$('testResults').textContent='Running 10 randomized seasons (20 optimization attempts each)…';setTimeout(()=>{let failures=0,examples=[],min=Infinity,max=0;try{for(let i=0;i<10;i++){const a=auditSchedule(optimize(c,20),c);min=Math.min(min,a.matches);max=Math.max(max,a.matches);if(!a.valid){failures++;examples.push(`Run ${i+1}: ${a.errors[0]}`)}}$('testResults').textContent=`${10-failures}/10 passed · Actual matches per season: ${min}–${max}. ${examples.slice(0,3).join(' | ')}`;}catch(e){$('testResults').textContent='Test error: '+e.message}finally{btn.disabled=false;btn.textContent='Run 10 randomized tests'}},40)});
 $('weekSelect').addEventListener('change',renderWeek);$('nightSelect').addEventListener('change',renderWeek);
@@ -201,6 +226,7 @@ $('save').addEventListener('click',save);
 $('exportJSON').addEventListener('click',()=>download(backup(),'dart-league-backup.json','application/json'));
 $('importJSON').addEventListener('click',()=>$('importFile').click());
 $('importFile').addEventListener('change',async e=>{const f=e.target.files[0];if(!f)return;try{restore(JSON.parse(await f.text()));save();alert('Backup imported successfully')}catch(err){alert('Could not import backup: '+err.message)}e.target.value=''});
+$('helpToggle').addEventListener('click',()=>{const panel=$('helpPanel'),open=panel.hidden;panel.hidden=!open;$('helpToggle').setAttribute('aria-expanded',String(open));$('helpArrow').textContent=open?'Hide instructions ▴':'Show instructions ▾'});
 $('csv').addEventListener('click',exportCSV);$('print').addEventListener('click',()=>window.print());
 try{const saved=localStorage.getItem('dartLeagueScheduler.v1');if(saved)restore(JSON.parse(saved))}catch(e){$('saveStatus').textContent='Stored backup could not be restored: '+e.message+' · Export your old backup before saving over it.'}
 if(!names.length)syncNames();
