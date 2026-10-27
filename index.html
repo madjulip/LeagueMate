@@ -47,7 +47,7 @@ button.backup-button:hover{background:#D8DFDA}
 <li><strong>Enter your team names.</strong> Replace Team 1, Team 2, and so on with the actual names.</li>
 <li><strong>Click “Create My Schedule.”</strong> Wait for the schedule to appear. This may take a moment.</li>
 <li><strong>Review your schedule.</strong> Choose a week and day to see the teams, boards, and matches for each round. “Byes” are teams that have the week off.</li>
-<li><strong>Download your schedule.</strong> After creating your schedule, use “Download Schedule (Spreadsheet)” or “Print or Save as PDF”. To download a JPG, choose a week and day in Step 3, optionally enter the host number and title, then click “Download Selected Day as JPG”.</li>
+<li><strong>Download your schedule.</strong> After creating your schedule, use “Download Schedule (Spreadsheet)” or “Print or Save as PDF”. To download a JPG, choose a week and day in Step 3, optionally enter the host number and title, then click “Download Selected Day as JPG”. You can also download all days in the selected week or entire season together as a ZIP file containing individual JPGs.</li>
 <li><strong>Save your work (optional).</strong> “Save My Settings” saves in this browser. The optional gray backup buttons save a copy of your league information and schedule. For example, if you want to share/view a schedule as it appears on your browser on a separate device, click “Export League Backup” to download a backup file, then use “Import League Backup” on the other device or browser. Note: this is not the same thing as downloading the spreadsheet schedule.</li>
 </ol>
 <h2>Frequently Asked Questions</h2>
@@ -73,7 +73,7 @@ button.backup-button:hover{background:#D8DFDA}
 <section class="panel"><h2 class="step-heading">Step 3: View your schedule</h2>
 <div class="results-intro"><strong>Your schedule is ready!</strong> Choose a week and day to view matches, or use the green buttons below to download or print your schedule.</div>
 <div class="actions schedule-download-actions"><button class="download-schedule" id="csv">Download Schedule (Spreadsheet)</button><button class="download-schedule" id="print">Print or Save as PDF</button></div>
-<div class="tv-export"><h3>Daily Schedule JPG</h3><p class="muted">Download a JPG for the selected week and day, showing team numbers, rounds, and boards.</p><div class="grid two"><div><label for="tvTitle">JPG schedule title</label><input id="tvTitle" value="Fall 2026 - Dart League" placeholder="e.g. Fall 2026 - A-League"></div><div><label for="tvHost">Host team number (optional)</label><input id="tvHost" type="number" min="1" max="80" placeholder="e.g. 5"></div></div><div class="actions"><button class="download-schedule" id="downloadJPG">Download Selected Day as JPG</button></div><p id="jpgStatus" class="muted" role="status" aria-live="polite"></p></div>
+<div class="tv-export"><h3>Daily Schedule JPG</h3><p class="muted">Download one day as a JPG, or download a ZIP containing separate JPGs for every day in the selected week or entire season. The optional host number applies to every JPG in a ZIP.</p><div class="grid two"><div><label for="tvTitle">JPG schedule title</label><input id="tvTitle" value="Fall 2026 - Dart League" placeholder="e.g. Fall 2026 - A-League"></div><div><label for="tvHost">Host team number (optional)</label><input id="tvHost" type="number" min="1" max="80" placeholder="e.g. 5"></div></div><div class="actions"><button class="download-schedule" id="downloadJPG">Download Selected Day as JPG</button><button class="secondary" id="downloadWeekZIP">Download Selected Week as JPGs (ZIP)</button><button class="secondary" id="downloadSeasonZIP">Download Entire Season as JPGs (ZIP)</button></div><p id="jpgStatus" class="muted" role="status" aria-live="polite"></p></div>
 <div class="grid two"><div><label for="weekSelect">Week</label><select id="weekSelect"></select></div><div><label for="nightSelect">Night</label><select id="nightSelect"></select></div></div><div id="nightSummary" class="note"></div><div id="rounds"></div><h3>Weekly overview</h3><div id="weekOverview"></div></section>
 <section class="panel"><h2>Additional Schedule Information (Optional)</h2><h3>Your Schedule at a Glance</h3><div id="stats" class="stats"></div><p id="fairness" class="muted"></p>
 <h3>Schedule Checks</h3><p id="auditStatus" class="muted">Generate a season to check its matches.</p><div id="auditDetails" class="muted"></div><div class="actions"><button class="secondary" id="runTests">Run 10 randomized tests</button></div><p id="testResults" class="muted"></p></section>
@@ -254,15 +254,21 @@ $('importJSON').addEventListener('click',()=>$('importFile').click());
 $('importFile').addEventListener('change',async e=>{const f=e.target.files[0];if(!f)return;try{restore(JSON.parse(await f.text()));save();alert('Backup imported successfully')}catch(err){alert('Could not import backup: '+err.message)}e.target.value=''});
 $('helpToggle').addEventListener('click',()=>{const panel=$('helpPanel'),open=panel.hidden;panel.hidden=!open;$('helpToggle').setAttribute('aria-expanded',String(open));$('helpArrow').textContent=open?'Hide instructions ▴':'Show instructions ▾'});
 // Render the selected playing day to a self-contained JPEG, without external libraries.
-function exportDayJPG(){
- if(!season||!settings)return;
- const weekIndex=Number($('weekSelect').value)||0,dayIndex=Number($('nightSelect').value)||0;
- const week=season[weekIndex],night=week.nights[dayIndex],boards=settings.boards,rounds=night.rounds.length;
- const title=$('tvTitle').value.trim()||'Dart League';
- const rawHost=$('tvHost').value.trim();
+function jpgOptions(){
+ if(!season||!settings)return null;
+ const title=$('tvTitle').value.trim()||'Dart League',rawHost=$('tvHost').value.trim();
  if(rawHost && (!Number.isInteger(Number(rawHost))||Number(rawHost)<1||Number(rawHost)>settings.teams)){
-  $('jpgStatus').textContent='Please enter a host team number between 1 and '+settings.teams+', or leave it blank.';return;
+  $('jpgStatus').textContent='Please enter a host team number between 1 and '+settings.teams+', or leave it blank.';return null;
  }
+ return {title,rawHost};
+}
+function jpgFileName(title,weekIndex,dayIndex){
+ const safe=s=>s.replace(/[^a-z0-9]+/gi,'-').replace(/^-|-$/g,'').slice(0,45)||'league';
+ return `${safe(title)}-Week-${String(weekIndex+1).padStart(2,'0')}-${safe(dayLabel(dayIndex))}.jpg`;
+}
+// Render any week and day, so single JPG and ZIP exports use identical images.
+function renderDayCanvas(weekIndex,dayIndex,title,rawHost){
+ const week=season[weekIndex],night=week.nights[dayIndex],boards=settings.boards,rounds=night.rounds.length;
  const W=1600,H=980,canvas=document.createElement('canvas');canvas.width=W;canvas.height=H;
  const ctx=canvas.getContext('2d');if(!ctx){$('jpgStatus').textContent='This browser cannot create the JPG image.';return;}
  const purple='#79009F',pale='#F1E4FA',white='#FFFFFF',black='#111111';
@@ -296,17 +302,73 @@ function exportDayJPG(){
    fitted(pair,x,y+rowH/2,cell,37,22);
   }
  }
- canvas.toBlob(blob=>{
-  if(!blob){$('jpgStatus').textContent='Unable to create JPG in this browser.';return;}
-  const url=URL.createObjectURL(blob),a=document.createElement('a');
-  const safeTitle=title.replace(/[^a-z0-9]+/gi,'-').replace(/^-|-$/g,'').slice(0,45)||'league';
-  const safeDay=dayLabel(dayIndex).replace(/[^a-z0-9]+/gi,'-');
-  a.href=url;a.download=`${safeTitle}-Week-${week.week}-${safeDay}.jpg`;document.body.append(a);a.click();a.remove();
-  setTimeout(()=>URL.revokeObjectURL(url),3000);
-  $('jpgStatus').textContent=`JPG prepared for Week ${week.week}, ${dayLabel(dayIndex)} (1600 × 980).`;
- },'image/jpeg',0.94);
+ return canvas;
+}
+function canvasJPG(canvas){
+ return new Promise((resolve,reject)=>canvas.toBlob(blob=>blob?resolve(blob):reject(Error('Unable to create JPG in this browser.')),'image/jpeg',0.94));
+}
+function downloadBlob(blob,filename){
+ const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=filename;
+ document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),10000);
+}
+async function exportDayJPG(){
+ const opts=jpgOptions();if(!opts)return;
+ try{
+  const wi=Number($('weekSelect').value)||0,di=Number($('nightSelect').value)||0;
+  const blob=await canvasJPG(renderDayCanvas(wi,di,opts.title,opts.rawHost));
+  downloadBlob(blob,jpgFileName(opts.title,wi,di));
+  $('jpgStatus').textContent=`JPG prepared for Week ${wi+1}, ${dayLabel(di)} (1600 × 980).`;
+ }catch(e){$('jpgStatus').textContent=e.message}
+}
+// ZIP writer using the standard STORE method (no external libraries or internet required).
+const zipEncoder=new TextEncoder();
+const crcTable=Array.from({length:256},(_,n)=>{for(let j=0;j<8;j++)n=n&1?0xEDB88320^(n>>>1):n>>>1;return n>>>0});
+function crc32(bytes){let crc=0xFFFFFFFF;for(const b of bytes)crc=crcTable[(crc^b)&255]^(crc>>>8);return (crc^0xFFFFFFFF)>>>0}
+function zipJPGFiles(files){
+ const chunks=[],central=[];let offset=0;
+ const u16=(v,n,o)=>v.setUint16(o,n,true),u32=(v,n,o)=>v.setUint32(o,n>>>0,true);
+ for(const file of files){
+  const name=zipEncoder.encode(file.name),data=file.bytes,crc=crc32(data);
+  const local=new Uint8Array(30+name.length),lv=new DataView(local.buffer);
+  u32(lv,0x04034b50,0);u16(lv,20,4);u16(lv,0,6);u16(lv,0,8);u32(lv,crc,14);
+  u32(lv,data.length,18);u32(lv,data.length,22);u16(lv,name.length,26);local.set(name,30);
+  chunks.push(local,data);
+  const cd=new Uint8Array(46+name.length),cv=new DataView(cd.buffer);
+  u32(cv,0x02014b50,0);u16(cv,20,4);u16(cv,20,6);u16(cv,0,8);u16(cv,0,10);
+  u32(cv,crc,16);u32(cv,data.length,20);u32(cv,data.length,24);u16(cv,name.length,28);
+  u32(cv,offset,42);cd.set(name,46);central.push(cd);offset+=local.length+data.length;
+ }
+ const centralSize=central.reduce((sum,c)=>sum+c.length,0);
+ const end=new Uint8Array(22),ev=new DataView(end.buffer);
+ u32(ev,0x06054b50,0);u16(ev,files.length,8);u16(ev,files.length,10);
+ u32(ev,centralSize,12);u32(ev,offset,16);
+ return new Blob([...chunks,...central,end],{type:'application/zip'});
+}
+async function exportJPGZip(scope){
+ const opts=jpgOptions();if(!opts)return;
+ const btn=$('download'+(scope==='week'?'Week':'Season')+'ZIP');btn.disabled=true;
+ const wi=Number($('weekSelect').value)||0;
+ const indices=scope==='week'?[wi]:season.map((_,i)=>i);
+ const total=indices.length*settings.days,files=[];
+ try{
+  for(const w of indices)for(let d=0;d<settings.days;d++){
+   $('jpgStatus').textContent=`Creating JPG ${files.length+1} of ${total}…`;
+   // Yield to the browser between images to keep progress visible.
+   await new Promise(resolve=>setTimeout(resolve,0));
+   const blob=await canvasJPG(renderDayCanvas(w,d,opts.title,opts.rawHost));
+   files.push({name:jpgFileName(opts.title,w,d),bytes:new Uint8Array(await blob.arrayBuffer())});
+  }
+  if(files.length>65535)throw Error('Too many files for one ZIP.');
+  const zip=zipJPGFiles(files),safe=opts.title.replace(/[^a-z0-9]+/gi,'-').replace(/^-|-$/g,'').slice(0,45)||'league';
+  const suffix=scope==='week'?`Week-${String(wi+1).padStart(2,'0')}`:'Entire-Season';
+  downloadBlob(zip,`${safe}-${suffix}-JPGs.zip`);
+  $('jpgStatus').textContent=`ZIP ready: ${files.length} individual JPGs (${(zip.size/1024/1024).toFixed(1)} MB).`;
+ }catch(e){$('jpgStatus').textContent='Could not create ZIP: '+e.message}
+ finally{btn.disabled=false}
 }
 $('downloadJPG').addEventListener('click',exportDayJPG);
+$('downloadWeekZIP').addEventListener('click',()=>exportJPGZip('week'));
+$('downloadSeasonZIP').addEventListener('click',()=>exportJPGZip('season'));
 $('csv').addEventListener('click',exportCSV);$('print').addEventListener('click',()=>window.print());
 try{const saved=localStorage.getItem('dartLeagueScheduler.v1');if(saved)restore(JSON.parse(saved))}catch(e){$('saveStatus').textContent='Stored backup could not be restored: '+e.message+' · Export your old backup before saving over it.'}
 if(!names.length)syncNames();
