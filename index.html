@@ -31,7 +31,7 @@ button.download-schedule:hover{background:#175A47}
 .backup-tools .actions{margin-top:8px}
 button.backup-button{background:#E7EAE8;color:#3D5148;border:1px solid #C9D2CC;font-size:.9rem;font-weight:600}
 button.backup-button:hover{background:#D8DFDA}
-.spreadsheet-hint{font-size:1rem;line-height:1.5;margin-top:12px}.tv-export{border-top:1px solid #D7E9DF;margin:12px 0 20px;padding-top:12px}.tv-export h3{margin-top:4px;font-size:1.5rem;line-height:1.3}.tv-export label{font-size:.94rem}
+.download-choice{display:grid;grid-template-columns:1fr 1.25fr;gap:18px}.download-option{padding:18px;border:1px solid #D7E9DF;border-radius:12px;background:#FAFDFB}.download-option h3{font-size:1.2rem;margin:0 0 8px}.download-option p{line-height:1.5}.jpg-controls{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0}.download-option button{margin-top:10px}@media(max-width:760px){.download-choice,.jpg-controls{grid-template-columns:1fr}}.spreadsheet-hint{font-size:1rem;line-height:1.5;margin-top:12px}.tv-export{border-top:1px solid #D7E9DF;margin:12px 0 20px;padding-top:12px}.tv-export h3{margin-top:4px;font-size:1.5rem;line-height:1.3}.tv-export label{font-size:.94rem}
 </style>
 </head>
 <body>
@@ -47,7 +47,7 @@ button.backup-button:hover{background:#D8DFDA}
 <li><strong>Enter your team names.</strong> Replace Team 1, Team 2, and so on with the actual names.</li>
 <li><strong>Click “Create My Schedule.”</strong> Wait for the schedule to appear. This may take a moment.</li>
 <li><strong>Review your schedule.</strong> Choose a week and day to see the teams, boards, and matches for each round. “Byes” are teams that have the week off.</li>
-<li><strong>Download your schedule.</strong> After creating your schedule, use “Download Schedule (Spreadsheet)” or “Print or Save as PDF”. To download a JPG, choose a week and day in Step 3, enter a JPG schedule title, then choose a JPG download option. “Download Entire Season as JPGs (ZIP)” saves all playing days together; you can also download the selected week or just one day.</li>
+<li><strong>Download your schedule.</strong> After creating your schedule, use Step 3 to download a spreadsheet or JPG schedules. For JPGs, choose the entire season, selected week, or selected day, then click the JPG download button. Multiple JPGs are bundled in a ZIP file.</li>
 <li><strong>Save your work (optional).</strong> “Save My Settings” saves in this browser. The optional gray backup buttons save a copy of your league information and schedule. For example, if you want to share/view a schedule as it appears on your browser on a separate device, click “Export League Backup” to download a backup file, then use “Import League Backup” on the other device or browser. Note: this is not the same thing as downloading the spreadsheet schedule.</li>
 </ol>
 <h2>Frequently Asked Questions</h2>
@@ -70,10 +70,11 @@ button.backup-button:hover{background:#D8DFDA}
 <div class="backup-tools"><strong>Optional: Keep a backup of your league</strong><p class="muted">Save a backup of your league information and schedule to import later. This downloads a JSON file, <strong>not</strong> the schedule spreadsheet.</p><div class="actions"><button class="backup-button" id="exportJSON">Export League Backup</button><button class="backup-button" id="importJSON">Import League Backup</button><input id="importFile" type="file" accept=".json,application/json" class="hidden"></div></div>
 <p class="muted">“Save My Settings” saves your work in this browser without downloading a file.</p></section>
 <section id="results" class="hidden">
-<section class="panel"><h2 class="step-heading">Step 3: View your schedule</h2>
-<div class="results-intro"><strong>Your schedule is ready!</strong> Choose a week and day to view matches, or use the green buttons below to download or print your schedule.</div>
-<div class="actions schedule-download-actions"><button class="download-schedule" id="csv">Download Schedule (Spreadsheet)</button><button class="download-schedule" id="print">Print or Save as PDF</button></div>
-<div class="tv-export"><h3>OR Download Schedule as JPGs</h3><p class="muted">Download the selected day as a JPG, or download a ZIP containing separate JPGs for every playing day in the selected week or entire season.</p><div><label for="tvTitle">JPG schedule title</label><input id="tvTitle" value="Fall 2026 - Dart League" placeholder="e.g. Fall 2026 - A-League"></div><div class="actions"><button class="download-schedule" id="downloadSeasonZIP">Download Entire Season as JPGs (ZIP)</button><button class="secondary" id="downloadWeekZIP">Download Selected Week as JPGs (ZIP)</button><button class="secondary" id="downloadJPG">Download Selected Day as JPG</button></div><p id="jpgStatus" class="muted" role="status" aria-live="polite"></p></div>
+<section class="panel"><h2 class="step-heading">Step 3: Download your schedule</h2>
+<div class="results-intro"><strong>Your schedule is ready!</strong> Download a spreadsheet or JPGs below. You can also view individual days in the next section.</div>
+<div class="download-choice"><div class="download-option"><h3>Download as Spreadsheet</h3><p class="muted">One spreadsheet with the full season schedule.</p><button class="download-schedule" id="csv">Download Schedule (Spreadsheet)</button></div>
+<div class="download-option"><h3>OR Download Schedule as JPGs</h3><p class="muted">Download individual JPG schedules. Multiple days are packaged together in a ZIP file.</p><div class="jpg-controls"><div><label for="tvTitle">JPG schedule title</label><input id="tvTitle" value="Fall 2026 - Dart League" placeholder="e.g. Fall 2026 - A-League"></div><div><label for="jpgRange">Which schedules?</label><select id="jpgRange"><option value="season">Entire season (ZIP)</option><option value="week">Selected week (ZIP)</option><option value="day">Selected day (JPG)</option></select></div></div><button class="download-schedule" id="downloadJPGChoice">Download JPGs (ZIP)</button><p id="jpgStatus" class="muted" role="status" aria-live="polite"></p></div></div></section>
+<section class="panel"><h2 class="step-heading">View your schedule</h2><p class="muted">Choose a week and day to see the matches and board assignments. The selected week and day are also used for JPG downloads.</p>
 <div class="grid two"><div><label for="weekSelect">Week</label><select id="weekSelect"></select></div><div><label for="nightSelect">Night</label><select id="nightSelect"></select></div></div><div id="nightSummary" class="note"></div><div id="rounds"></div><h3>Weekly overview</h3><div id="weekOverview"></div></section>
 <section class="panel"><h2>Additional Schedule Information (Optional)</h2><h3>Your Schedule at a Glance</h3><div id="stats" class="stats"></div><p id="fairness" class="muted"></p>
 <h3>Schedule Checks</h3><p id="auditStatus" class="muted">Generate a season to check its matches.</p><div id="auditDetails" class="muted"></div><div class="actions"><button class="secondary" id="runTests">Run 10 randomized tests</button></div><p id="testResults" class="muted"></p></section>
@@ -362,10 +363,10 @@ async function exportJPGZip(scope){
  }catch(e){$('jpgStatus').textContent='Could not create ZIP: '+e.message}
  finally{btn.disabled=false}
 }
-$('downloadJPG').addEventListener('click',exportDayJPG);
-$('downloadWeekZIP').addEventListener('click',()=>exportJPGZip('week'));
-$('downloadSeasonZIP').addEventListener('click',()=>exportJPGZip('season'));
-$('csv').addEventListener('click',exportCSV);$('print').addEventListener('click',()=>window.print());
+$('jpgRange').addEventListener('change',()=>{$('downloadJPGChoice').textContent=$('jpgRange').value==='day'?'Download Selected Day as JPG':$('jpgRange').value==='week'?'Download Selected Week as JPGs (ZIP)':'Download JPGs (ZIP)'});
+$('downloadJPGChoice').addEventListener('click',()=>{const range=$('jpgRange').value;if(range==='day')exportDayJPG();else exportJPGZip(range)});
+
+$('csv').addEventListener('click',exportCSV);
 try{const saved=localStorage.getItem('dartLeagueScheduler.v1');if(saved)restore(JSON.parse(saved))}catch(e){$('saveStatus').textContent='Stored backup could not be restored: '+e.message+' · Export your old backup before saving over it.'}
 if(!names.length)syncNames();
 </script>
