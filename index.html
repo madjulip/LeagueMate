@@ -302,7 +302,16 @@ function renderDayCanvas(weekIndex,dayIndex,title){
  return canvas;
 }
 function canvasJPG(canvas){
- return new Promise((resolve,reject)=>canvas.toBlob(blob=>blob?resolve(blob):reject(Error('Unable to create JPG in this browser.')),'image/jpeg',0.94));
+ return new Promise((resolve,reject)=>canvas.toBlob(async blob=>{
+  if(!blob){reject(Error('Unable to create JPG in this browser.'));return;}
+  try{
+   const signature=new Uint8Array(await blob.slice(0,3).arrayBuffer());
+   if(blob.type!=='image/jpeg'||signature[0]!==0xFF||signature[1]!==0xD8||signature[2]!==0xFF){
+    reject(Error('The browser did not produce a valid JPEG. Please try another browser.'));return;
+   }
+   resolve(blob);
+  }catch(e){reject(e)}
+ },'image/jpeg',0.94));
 }
 function downloadBlob(blob,filename){
  const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=filename;
@@ -343,7 +352,7 @@ function zipJPGFiles(files){
 }
 async function exportJPGZip(scope){
  const opts=jpgOptions();if(!opts)return;
- const btn=$('download'+(scope==='week'?'Week':'Season')+'ZIP');btn.disabled=true;
+ const btn=$('downloadJPGChoice');btn.disabled=true;
  const wi=Number($('weekSelect').value)||0;
  const indices=scope==='week'?[wi]:season.map((_,i)=>i);
  const total=indices.length*settings.days,files=[];
