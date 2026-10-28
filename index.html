@@ -1,10 +1,10 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#79009F">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#175A47">
 <title>Dart League Scheduler</title>
 <style>
-:root{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#30213B;background:#F8F2FC}*{box-sizing:border-box}body{margin:0}header{background:#79009F;color:white;padding:22px max(18px,calc((100vw - 1120px)/2));display:flex;align-items:center;gap:12px}header h1{font-size:1.55rem;margin:0}header p{margin:4px 0 0;color:#F2DDFB;font-size:.88rem}.logo{font-size:2rem}main{max-width:1120px;margin:24px auto;padding:0 16px 45px}.panel{background:white;border:1px solid #E7D8F0;border-radius:14px;padding:20px;margin-bottom:18px;box-shadow:0 2px 9px #79009F12}h2{margin:0 0 14px;font-size:1.18rem}h3{margin:16px 0 9px;font-size:1rem}.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.grid.two{grid-template-columns:repeat(2,minmax(0,1fr))}label{display:block;font-weight:650;font-size:.82rem;margin-bottom:5px}input,select{width:100%;padding:10px;border:1px solid #C8A9D8;border-radius:8px;background:white;color:#30213B;font:inherit;min-width:0}input[type=number]{font-variant-numeric:tabular-nums}button{background:#8B19B3;border:0;color:white;border-radius:8px;padding:11px 15px;font:inherit;font-weight:700;cursor:pointer}button:hover{background:#69008B}button.secondary{background:#F0DFF9;color:#5E2678}button.secondary:hover{background:#E7CEF4}button:disabled{opacity:.55;cursor:wait}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}.muted{color:#685775;font-size:.86rem}.note{padding:12px;background:#F2E6FA;border-radius:9px;font-size:.88rem;margin-top:12px}.warning{background:#fff1e5;color:#824518}.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.stat{background:#F5EBFA;padding:14px;border-radius:10px}.stat strong{font-size:1.5rem;display:block}.stat span{color:#685775;font-size:.8rem}.teams{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}.teams input{font-size:.87rem}.tabs{display:flex;gap:7px;flex-wrap:wrap;margin:14px 0}.tab{background:#F0DFF9;color:#5E2678}.tab.active{background:#8B19B3;color:white}.matchtable{width:100%;border-collapse:collapse}.matchtable th,.matchtable td{text-align:left;padding:10px;border-bottom:1px solid #EDE2F3;font-size:.91rem}.matchtable th{background:#F7EFFB}.round{border:1px solid #E6D6EF;border-radius:10px;margin:9px 0;overflow:hidden}.round summary{cursor:pointer;padding:12px 14px;background:#F5EBFA;font-weight:700}.round table{width:100%}.pill{display:inline-block;background:#EBD8F5;border-radius:99px;padding:5px 10px;font-size:.83rem}.history-table{width:100%;border-collapse:collapse;font-size:.82rem}.history-table th,.history-table td{padding:6px;text-align:center;border:1px solid #E6D6EF;min-width:28px}.history-table th{background:#EDDEF6;position:sticky;top:0}.history-table td.zero{background:#FAF6FC}.history-table td.one{background:#E5D2F3}.history-table td.two{background:#ffedba}.history-table td.many{background:#f5c8c6}.scroll{overflow:auto;max-height:550px}.hidden{display:none!important}.inline{display:flex;gap:12px;align-items:center;flex-wrap:wrap}.inline>*{flex:1}footer{color:#766481;text-align:center;font-size:.78rem;padding:16px} @media(max-width:720px){.grid,.teams,.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.panel{padding:15px}header{padding:20px 16px}.matchtable td{font-size:.84rem}}@media(max-width:390px){.grid,.teams{grid-template-columns:1fr}}
+:root{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#243B31;background:#F3FAF6}*{box-sizing:border-box}body{margin:0}header{background:#175A47;color:white;padding:22px max(18px,calc((100vw - 1120px)/2));display:flex;align-items:center;gap:12px}header h1{font-size:1.55rem;margin:0}header p{margin:4px 0 0;color:#DDF2E9;font-size:.88rem}.logo{font-size:2rem}main{max-width:1120px;margin:24px auto;padding:0 16px 45px}.panel{background:white;border:1px solid #D7E9DF;border-radius:14px;padding:20px;margin-bottom:18px;box-shadow:0 2px 9px #175A4712}h2{margin:0 0 14px;font-size:1.18rem}h3{margin:16px 0 9px;font-size:1rem}.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.grid.two{grid-template-columns:repeat(2,minmax(0,1fr))}label{display:block;font-weight:650;font-size:.82rem;margin-bottom:5px}input,select{width:100%;padding:10px;border:1px solid #B9D5C5;border-radius:8px;background:white;color:#243B31;font:inherit;min-width:0}input[type=number]{font-variant-numeric:tabular-nums}button{background:#25866A;border:0;color:white;border-radius:8px;padding:11px 15px;font:inherit;font-weight:700;cursor:pointer}button:hover{background:#1D7058}button.secondary{background:#DDF2E9;color:#174D3D}button.secondary:hover{background:#C8E8D9}button:disabled{opacity:.55;cursor:wait}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}.muted{color:#587568;font-size:.86rem}.note{padding:12px;background:#E5F5EC;border-radius:9px;font-size:.88rem;margin-top:12px}.warning{background:#fff1e5;color:#824518}.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.stat{background:#EAF6EF;padding:14px;border-radius:10px}.stat strong{font-size:1.5rem;display:block}.stat span{color:#587568;font-size:.8rem}.teams{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}.teams input{font-size:.87rem}.tabs{display:flex;gap:7px;flex-wrap:wrap;margin:14px 0}.tab{background:#DDF2E9;color:#174D3D}.tab.active{background:#25866A;color:white}.matchtable{width:100%;border-collapse:collapse}.matchtable th,.matchtable td{text-align:left;padding:10px;border-bottom:1px solid #E3EEE7;font-size:.91rem}.matchtable th{background:#F1F8F3}.round{border:1px solid #D5E9DD;border-radius:10px;margin:9px 0;overflow:hidden}.round summary{cursor:pointer;padding:12px 14px;background:#EAF6EF;font-weight:700}.round table{width:100%}.pill{display:inline-block;background:#D6F0E2;border-radius:99px;padding:5px 10px;font-size:.83rem}.history-table{width:100%;border-collapse:collapse;font-size:.82rem}.history-table th,.history-table td{padding:6px;text-align:center;border:1px solid #D5E9DD;min-width:28px}.history-table th{background:#E0F1E7;position:sticky;top:0}.history-table td.zero{background:#F2F8F4}.history-table td.one{background:#CBEEE1}.history-table td.two{background:#ffedba}.history-table td.many{background:#f5c8c6}.scroll{overflow:auto;max-height:550px}.hidden{display:none!important}.inline{display:flex;gap:12px;align-items:center;flex-wrap:wrap}.inline>*{flex:1}footer{color:#60786B;text-align:center;font-size:.78rem;padding:16px} @media(max-width:720px){.grid,.teams,.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.panel{padding:15px}header{padding:20px 16px}.matchtable td{font-size:.84rem}}@media(max-width:390px){.grid,.teams{grid-template-columns:1fr}}
 /* Equal-width setup fields with extra breathing room between them. */
 .setup-date-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:32px;row-gap:14px;margin-top:12px}
 .setup-date-row > div{min-width:0;overflow:hidden}
@@ -13,9 +13,9 @@
 @media(max-width:650px){.setup-date-row{grid-template-columns:minmax(0,1fr)}}
 
 .help-toggle{width:100%;text-align:left;display:flex;justify-content:space-between;align-items:center;font-size:1.1rem;padding:16px 18px}
-.help-panel{margin-top:12px;border:1px solid #E7D8F0;border-radius:12px;padding:18px;background:#FCF8FE}
+.help-panel{margin-top:12px;border:1px solid #D7E9DF;border-radius:12px;padding:18px;background:#F7FCF9}
 .help-panel h3{margin:12px 0 6px}.help-panel ol{padding-left:24px;line-height:1.65}.help-panel li{margin-bottom:12px}.help-panel p{line-height:1.55}
-.help-panel[hidden]{display:none}.primary-action{font-size:1.1rem;padding:14px 20px}.results-intro{background:#F2E6FA;border-radius:10px;padding:14px;margin-bottom:14px}
+.help-panel[hidden]{display:none}.primary-action{font-size:1.1rem;padding:14px 20px}.results-intro{background:#E5F5EC;border-radius:10px;padding:14px;margin-bottom:14px}
 @media print{.help-section,.actions,#generateStatus,#saveStatus{display:none!important}}
 .header-tagline{color:#ffffff;font-size:.9rem;font-weight:600;margin-top:5px}
 /* Larger, easier-to-read setup fields and step headings. */
@@ -23,15 +23,17 @@
 .setup-fields label{font-size:1.05rem;line-height:1.4;margin-bottom:8px}
 .setup-fields input{font-size:1.08rem;padding:13px 12px}
 /* Make schedule downloads easy to spot. */
-button.download-schedule{background:#79009F;color:#fff;font-size:1.05rem;padding:13px 18px}
-button.download-schedule:hover{background:#79009F}
+button.download-schedule{background:#175A47;color:#fff;font-size:1.05rem;padding:13px 18px}
+button.download-schedule:hover{background:#175A47}
 .schedule-download-actions{margin-top:0;margin-bottom:18px}
 /* Backup actions are optional, quiet controls—not the schedule download. */
-.backup-tools{margin-top:14px;padding:12px 14px;border:1px solid #E7D8F0;border-radius:10px;background:#FAF6FC}
+.backup-tools{margin-top:14px;padding:12px 14px;border:1px solid #D7E9DF;border-radius:10px;background:#F2F8F4}
 .backup-tools .actions{margin-top:8px}
-button.backup-button{background:#EEE9F1;color:#51465B;border:1px solid #D7CBDD;font-size:.9rem;font-weight:600}
-button.backup-button:hover{background:#E4DCE9}
-.download-choice{display:grid;grid-template-columns:1fr 1.25fr;gap:18px}.download-option{padding:18px;border:1px solid #E7D8F0;border-radius:12px;background:#FDF9FF}.download-option h3{font-size:1.2rem;margin:0 0 8px}.download-option p{line-height:1.5}.jpg-controls{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0}.download-option button{margin-top:10px}@media(max-width:760px){.download-choice,.jpg-controls{grid-template-columns:1fr}}.spreadsheet-hint{font-size:1rem;line-height:1.5;margin-top:12px}.tv-export{border-top:1px solid #E7D8F0;margin:12px 0 20px;padding-top:12px}.tv-export h3{margin-top:4px;font-size:1.5rem;line-height:1.3}.tv-export label{font-size:.94rem}
+button.backup-button{background:#E7EAE8;color:#3D5148;border:1px solid #C9D2CC;font-size:.9rem;font-weight:600}
+button.backup-button:hover{background:#D8DFDA}
+.download-choice{display:grid;grid-template-columns:1fr 1.25fr;gap:18px}.download-option{padding:18px;border:1px solid #D7E9DF;border-radius:12px;background:#F9FCFA}.download-option h3{font-size:1.2rem;margin:0 0 8px}.download-option p{line-height:1.5}.jpg-controls{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0}.download-option button{margin-top:10px}@media(max-width:760px){.download-choice,.jpg-controls{grid-template-columns:1fr}}.spreadsheet-hint{font-size:1rem;line-height:1.5;margin-top:12px}.tv-export{border-top:1px solid #D7E9DF;margin:12px 0 20px;padding-top:12px}.tv-export h3{margin-top:4px;font-size:1.5rem;line-height:1.3}.tv-export label{font-size:.94rem}
+/* Independent schedules: one by default, optional second league. */
+.league-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.league-head h2{margin:0}.league-tabs{display:flex;gap:9px;flex-wrap:wrap;margin:14px 0}.league-tabs button{background:#DDF2E9;color:#174D3D}.league-tabs button.active{background:#175A47;color:white}.league-name-row{display:flex;gap:12px;align-items:end;flex-wrap:wrap}.league-name-row>div{flex:1;min-width:180px}.league-name-row button{background:#E7EAE8;color:#3D5148}.league-summary{font-size:.9rem;margin-top:12px}.league-summary.warning{padding:12px;border-radius:9px}
 </style>
 </head>
 <body>
@@ -42,6 +44,7 @@ button.backup-button:hover{background:#E4DCE9}
 <h1>Welcome to LeagueMate!</h1>
 <p>LeagueMate generates a custom schedule specifically for dart leagues. No account or installation is needed. Simply save this link for later, and schedule to your heart's content.</p>
 <ol>
+<li><strong>Choose your schedule.</strong> Start with one schedule, or click “Add Another League” if you have two independent leagues. Switch between them using the tabs. Each league has its own settings, team names, and schedule.</li>
 <li><strong>Enter your league information.</strong> Fill in how many teams you have, how many days you play each week, how many dartboards are available each day, and how many weeks the season lasts.</li>
 <li><strong>Choose your playing days.</strong> Enter the season start date if you know it or keep it blank. In “Playing days,” add the list of days your league plans matches, separated by commas (for example: Monday, Wednesday, Thursday).</li>
 <li><strong>Enter your team names.</strong> Replace Team 1, Team 2, and so on with the actual names.</li>
@@ -56,6 +59,7 @@ button.backup-button:hover{background:#E4DCE9}
 <p><strong>Can I make changes?</strong> Yes. Changing league settings means you will need to create a new schedule. Save a league backup first if you want to keep the old one.</p>
 <p><strong>What are “Schedule Checks” and “Opponent History”?</strong> These are optional reports. You do not need them to make or print your schedule.</p>
 </div></section>
+<section class="panel" id="leagueManager"><div class="league-head"><h2 class="step-heading">Your Schedules</h2><button id="addLeague" class="secondary" type="button">+ Add Another League</button></div><p class="muted">Start with one schedule. Add a second if your teams play in separate leagues. Each schedule is saved independently.</p><div class="league-tabs" id="leagueTabs" role="group" aria-label="Choose schedule"></div><div class="league-name-row"><div><label for="leagueName">Schedule name</label><input id="leagueName" maxlength="60" value="Dart League" placeholder="e.g. A-League"></div><button id="removeLeague" type="button" class="secondary hidden">Remove Second League</button></div><div id="leagueSummary" class="note league-summary" role="status"></div></section>
 <section class="panel setup-fields"><h2 class="step-heading">Step 1: Set up your league</h2><div class="grid">
 <div><label for="teamCount">Teams</label><input id="teamCount" type="number" min="2" max="80" step="2" value="28"></div>
 <div><label for="days">Nights per week</label><input id="days" type="number" min="1" max="7" value="3"></div>
@@ -84,6 +88,19 @@ button.backup-button:hover{background:#E4DCE9}
 'use strict';
 const $=id=>document.getElementById(id);
 let names=[],season=null,settings=null;
+const MULTI_KEY='dartLeagueScheduler.multi.v1',LEGACY_KEY='dartLeagueScheduler.v1',MAX_COMBINED_TEAMS=28;
+let leagueRecords=[],activeLeague=0;
+function blankLeague(name='Dart League',teams=8){return {name,data:{version:2,settings:{teams,days:1,boards:4,weeks:12,startDate:'',dayNames:['Monday']},names:Array.from({length:teams},(_,i)=>`Team ${i+1}`),season:null},jpgTitle:''}}
+function storeActive(){if(!leagueRecords.length)return;leagueRecords[activeLeague].data=currentBackup();leagueRecords[activeLeague].jpgTitle=$('tvTitle').value;}
+function persistLeagues(){try{localStorage.setItem(MULTI_KEY,JSON.stringify({version:1,active:activeLeague,leagues:leagueRecords}));return true}catch(e){$('saveStatus').textContent='Could not save in this browser. Export a league backup.';return false}}
+function totalLeagueTeams(){return leagueRecords.reduce((sum,l,i)=>sum+(i===activeLeague?Number($('teamCount').value)||0:Number(l.data.settings.teams)||0),0)}
+function refreshLeagueUI(){const tabs=$('leagueTabs');tabs.replaceChildren();leagueRecords.forEach((l,i)=>{const b=document.createElement('button');b.type='button';b.className=i===activeLeague?'active':'';b.textContent=l.name;b.setAttribute('aria-pressed',String(i===activeLeague));b.addEventListener('click',()=>switchLeague(i));tabs.append(b)});$('leagueName').value=leagueRecords[activeLeague].name;$('addLeague').classList.toggle('hidden',leagueRecords.length>=2);$('removeLeague').classList.toggle('hidden',leagueRecords.length<2);const count=totalLeagueTeams(),msg=leagueRecords.length===1?`${count} teams in this schedule. You can add a second independent league.`:`${count} of ${MAX_COMBINED_TEAMS} total teams across both leagues. Each league plays only its own teams.`;$('leagueSummary').textContent=msg+(count>MAX_COMBINED_TEAMS?' Reduce the team counts to create schedules.':'');$('leagueSummary').classList.toggle('warning',count>MAX_COMBINED_TEAMS)}
+function switchLeague(i){if(i===activeLeague)return;storeActive();persistLeagues();activeLeague=i;restore(leagueRecords[i].data);$('tvTitle').value=leagueRecords[i].jpgTitle||leagueRecords[i].name;refreshLeagueUI();persistLeagues()}
+function initializeLeagues(){try{const raw=localStorage.getItem(MULTI_KEY);if(raw){const obj=JSON.parse(raw);if(obj&&Array.isArray(obj.leagues)&&obj.leagues.length>=1&&obj.leagues.length<=2&&obj.leagues.every(l=>l&&typeof l.name==='string'&&l.data&&l.data.settings)){leagueRecords=obj.leagues;activeLeague=Math.max(0,Math.min(obj.active||0,leagueRecords.length-1))}}}catch(e){}
+if(!leagueRecords.length){let old=null;try{old=JSON.parse(localStorage.getItem(LEGACY_KEY)||'null')}catch(e){};leagueRecords=[old&&old.settings&&Array.isArray(old.names)?{name:'Dart League',data:old,jpgTitle:''}:blankLeague()];activeLeague=0}
+try{restore(leagueRecords[activeLeague].data)}catch(e){leagueRecords[activeLeague]=blankLeague();restore(leagueRecords[activeLeague].data);$('saveStatus').textContent='A stored schedule could not be restored. Check your saved backup.'}
+$('tvTitle').value=leagueRecords[activeLeague].jpgTitle||leagueRecords[activeLeague].name;refreshLeagueUI();persistLeagues()}
+
 const escapeHTML=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function config(){return {teams:Number($('teamCount').value),days:Number($('days').value),boards:Number($('boards').value),weeks:Number($('weeks').value),startDate:$('startDate').value,dayNames:$('dayNames').value.split(',').map(s=>s.trim()).filter(Boolean)}}
 function validate(c){if(![c.teams,c.days,c.boards,c.weeks].every(Number.isInteger))return 'Enter whole numbers in every numeric field.';if(c.teams<2||c.teams>80||c.teams%2)return 'Team count must be an even number from 2 to 80.';if(c.days<1||c.days>7||c.boards<1||c.boards>12||c.weeks<1||c.weeks>52)return 'Check the allowed ranges for nights, boards, and weeks.';if(c.teams<c.days*c.boards*2)return 'This version fills every board on every night. Reduce nights/boards or increase teams.';return ''}
@@ -216,7 +233,7 @@ function currentBackup(){
  return {version:2,settings:c,names:names.slice(),season:matching?season:null};
 }
 function backup(){return JSON.stringify(currentBackup(),null,2)}
-function save(){try{localStorage.setItem('dartLeagueScheduler.v1',backup());$('saveStatus').textContent='Saved on this device · '+new Date().toLocaleTimeString();}catch(e){$('saveStatus').textContent='Save failed: browser storage unavailable. Export a backup instead.';alert('Browser storage is unavailable. Use Export backup instead.')}}
+function save(){storeActive();if(persistLeagues())$('saveStatus').textContent='Saved on this device · '+new Date().toLocaleTimeString();else alert('Browser storage is unavailable. Use Export League Backup instead.')}
 function restore(data){
  if(!data||!data.settings||!Array.isArray(data.names))throw Error('Missing league settings or team names');
  const c=data.settings,err=validate({...c,days:1,boards:1});if(err)throw Error(err);
@@ -235,11 +252,11 @@ function restore(data){
 }
 function csvCell(s){return '"'+String(s).replace(/"/g,'""')+'"'}
 function exportCSV(){if(!season)return;const rows=[['Week','Night','Date','Round','Board','Team A','Team B']];for(const w of season)for(const nt of w.nights)for(let r=0;r<nt.rounds.length;r++)for(const g of nt.rounds[r])rows.push([w.week,dayLabel(nt.day),dateLabel(w.week,nt.day),r+1,g.board,displayName(g.a),displayName(g.b)]);download(rows.map(r=>r.map(csvCell).join(',')).join('\r\n'),'dart-league-schedule.csv','text/csv;charset=utf-8')}
-$('teamCount').addEventListener('input',()=>{syncNames();markChanged(true)});
+$('teamCount').addEventListener('input',()=>{syncNames();markChanged(true);refreshLeagueUI()});
 ['days','boards','weeks','startDate','dayNames'].forEach(id=>$(id).addEventListener('input',()=>{capacity();markChanged(true)}));
 $('resetNames').addEventListener('click',()=>{names=names.map((_,i)=>`Team ${i+1}`);renderNames();markChanged(false)});
 $('generate').addEventListener('click',()=>{
- syncNames();const c=config(),error=validate(c);
+ syncNames();const c=config(),error=totalLeagueTeams()>MAX_COMBINED_TEAMS?`Both leagues together may have no more than ${MAX_COMBINED_TEAMS} teams. Please reduce the team count.`:validate(c);
  if(error){markChanged(true);showGenerateStatus('Cannot generate schedule: '+error+' Current setup: '+c.teams+' teams, '+c.days+' nights per week, '+c.boards+' boards per night.',true);$('generateStatus').scrollIntoView({behavior:'smooth',block:'center'});return}
  const button=$('generate');button.disabled=true;button.textContent='Creating schedule…';showGenerateStatus('Generating '+c.weeks+' weeks for '+c.teams+' teams. Please wait…');
  setTimeout(()=>{try{const candidate=optimize(c),audit=auditSchedule(candidate,c);if(!audit.valid)throw Error(audit.errors[0]);
@@ -252,7 +269,7 @@ $('historyTeam').addEventListener('change',renderHistory);$('historyThrough').ad
 $('save').addEventListener('click',save);
 $('exportJSON').addEventListener('click',()=>download(backup(),'dart-league-backup.json','application/json'));
 $('importJSON').addEventListener('click',()=>$('importFile').click());
-$('importFile').addEventListener('change',async e=>{const f=e.target.files[0];if(!f)return;try{restore(JSON.parse(await f.text()));save();alert('Backup imported successfully')}catch(err){alert('Could not import backup: '+err.message)}e.target.value=''});
+$('importFile').addEventListener('change',async e=>{const f=e.target.files[0];if(!f)return;try{const imported=JSON.parse(await f.text());const other=leagueRecords.reduce((n,l,i)=>n+(i===activeLeague?0:Number(l.data.settings.teams)||0),0);if(imported.settings&&other+Number(imported.settings.teams)>MAX_COMBINED_TEAMS)throw Error('The imported league would exceed the 28-team combined limit.');restore(imported);save();refreshLeagueUI();alert('Backup imported successfully')}catch(err){alert('Could not import backup: '+err.message)}e.target.value=''});
 $('helpToggle').addEventListener('click',()=>{const panel=$('helpPanel'),open=panel.hidden;panel.hidden=!open;$('helpToggle').setAttribute('aria-expanded',String(open));$('helpArrow').textContent=open?'Hide instructions ▴':'Show instructions ▾'});
 // Render the selected playing day to a self-contained JPEG, without external libraries.
 function jpgOptions(){
@@ -376,7 +393,11 @@ $('jpgRange').addEventListener('change',()=>{$('downloadJPGChoice').textContent=
 $('downloadJPGChoice').addEventListener('click',()=>{const range=$('jpgRange').value;if(range==='day')exportDayJPG();else exportJPGZip(range)});
 
 $('csv').addEventListener('click',exportCSV);
-try{const saved=localStorage.getItem('dartLeagueScheduler.v1');if(saved)restore(JSON.parse(saved))}catch(e){$('saveStatus').textContent='Stored backup could not be restored: '+e.message+' · Export your old backup before saving over it.'}
-if(!names.length)syncNames();
+$('addLeague').addEventListener('click',()=>{if(leagueRecords.length>=2)return;storeActive();const remaining=MAX_COMBINED_TEAMS-(Number($('teamCount').value)||0);if(remaining<2){alert('Reduce the first schedule to 26 teams or fewer before adding another league.');return}const nextTeams=Math.min(8,remaining%2===0?remaining:remaining-1);leagueRecords.push(blankLeague('B-League',nextTeams));if(leagueRecords[0].name==='Dart League')leagueRecords[0].name='A-League';persistLeagues();switchLeague(1)});
+$('removeLeague').addEventListener('click',()=>{if(leagueRecords.length<2)return;if(!confirm('Remove the second league and its saved schedule from this browser? Export its backup first if you want to keep it.'))return;storeActive();leagueRecords.splice(1,1);activeLeague=0;restore(leagueRecords[0].data);$('tvTitle').value=leagueRecords[0].jpgTitle||leagueRecords[0].name;refreshLeagueUI();persistLeagues()});
+$('leagueName').addEventListener('input',()=>{leagueRecords[activeLeague].name=$('leagueName').value.trim()||`Schedule ${activeLeague+1}`;Array.from($('leagueTabs').children)[activeLeague].textContent=leagueRecords[activeLeague].name;persistLeagues()});
+$('tvTitle').addEventListener('change',()=>{storeActive();persistLeagues()});
+window.addEventListener('beforeunload',()=>{storeActive();persistLeagues()});
+initializeLeagues();
 </script>
 </body></html>
