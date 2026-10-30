@@ -6,25 +6,21 @@ Created by Laine Watts ([@MadJulip](https://github.com/madjulip))
 
 LeagueMate helps organize dart leagues by creating season schedules, assigning teams to playing days and boards, and preparing schedules to download and share. No account, coding knowledge, or software installation is required.
 
-## Getting started: link or saved file
+## Getting started:
 
 You can use LeagueMate in either of two ways:
 
 **Use the link:** Open the link above in a web browser such as Edge, Chrome, or Safari. You need internet access to load the page initially.
 
-> **Link to Open LeagueMate online:** https://madjulip.github.io/LeagueMate/
+**OR**
 
 **Open a the Saved File from your Desktop:** Download the `LeagueMate.html` file, save it in a convenient folder (such as Documents), and double-click it in File Explorer. It opens in your default web browser, even without an internet connection. You do not need to install a separate program.
 
 ### Is this a Website?
 
-No. The 'LeagueMate.html' file will work similarly to a PDF saved on your computer: you can open the file from your desktop and it will open your web browser. You will see a URL in the address bar, but it's not actually using the internet. The LeagueMate file will behave similarly, and will not require internet access. 
+No. The 'LeagueMate.html' file will work similarly to a PDF saved on your computer: you can open the file from your desktop and it will open your web browser. You will see a URL in the address bar, but it's not actually using the internet. Unlike a PDF, there's no 'Save' button. Any schedules you create are automatically saved in your web browser, **but this does not guarantee its always saved.** Switching browsers, switching computers or clearing cache will remove any existing schedules, **so it's important to export backups** if you want to reference a specific schedule. You can export and import backups easily under the LeagueMate Step 2 section.
 
-The only time you will need internet is when using the LeagueMate link: https://madjulip.github.io/LeagueMate/.
-
-The current HTML application is approximately **51 KB (less than 0.1 MB)**. Downloaded JPGs, ZIPs, spreadsheets, and backups are separate files and may be larger.
-
-> **If the website is unavailable:** Your saved HTML copy can still open and run locally. Keep a copy on your computer if you want that fallback.
+> **If the link is unavailable:** Your saved HTML copy can still open and run locally. Keep a copy on your computer if you want that fallback.
 
 ## Creating a schedule
 
@@ -34,22 +30,24 @@ The current HTML application is approximately **51 KB (less than 0.1 MB)**. Down
 4. **Step 3 — Download your schedule.** Choose a spreadsheet or JPG format (see below).
 5. **View your schedule.** Select a week and playing day to review rounds, board assignments, and byes.
 
-**How scheduling works:** Each board accommodates two teams, and each team plays on only one day per week. LeagueMate fills every board on each scheduled day. For example, one day with four boards requires eight teams. If the league has exactly enough teams for its weekly playing slots, there are **no byes**. Otherwise, the remaining teams have a bye that week. The current version uses the same number of playing days and boards each week.
+**How scheduling works:** This tool operates under the assumption that each board accommodates two teams, and each team only plays *one day per week.* LeagueMate fills every board on each scheduled day. For example, one day with four boards requires eight teams. If the league has exactly enough teams for its weekly playing slots, there are **no byes**. Otherwise, the remaining teams have a bye that week. The current version uses the same number of playing days and boards each week.
 
 ## Downloading schedules
 
-> **Important — exports are for the selected league only.** If you have both A-League and B-League, choose A-League and download its schedule, then switch to B-League and download its schedule separately. **Export League Backup** also saves only the currently selected league, not both leagues together.
+> **Important — exports are for the selected league only.** If you have multiple leagues, you must export and download schedules separately.
+>
+> For example, if you have an A-League and B-League, choose A-League and download its schedule, then switch to B-League and download its schedule separately. **Export League Backup** operates the same way, you must export each league separately.
 
 | Option | What you receive | Best for |
 | --- | --- | --- |
-| **Download Schedule (Spreadsheet)** | A `.csv` file containing the full season | Opening in Excel or another spreadsheet program |
-| **Entire season (ZIP)** | One `.zip` file containing a separate `.jpg` for every playing day | Preparing all daily rotation images at once |
+| **Download Schedule (Spreadsheet)** | A `.csv` file containing the full season | Opening in Excel, Google Sheets or other spreadsheet program |
+| **Entire season (ZIP)** | One `.zip` file containing a separate `.jpg` for every playing day | Preparing all rotation images at once |
 | **Selected week (ZIP)** | One `.zip` containing the JPGs for the selected week | Sharing one week's rotations |
 | **Selected day (JPG)** | One `.jpg` image | Sharing or displaying a single day's rotation |
 
 To download JPGs, choose the range under **OR Download Schedule as JPGs** and click the JPG download button. **Entire season** is the default. Use the **Week** and **Night** selectors in **View your schedule** to choose a specific week or day before downloading those ranges.
 
-The **JPG schedule title** fills automatically from **Schedule name**, but you can change it if needed. The JPGs use the purple rotation-sheet format, even though the application itself uses an Emerald Green theme.
+The **JPG schedule title** defaults to the name of the league, but you can change overwrite it.
 
 To use a ZIP file, open or extract it with your computer's built-in ZIP support to access the individual JPG images.
 
@@ -110,6 +108,9 @@ Optional reports that help review matchups, byes, and schedule balance. They are
 
 **Can some weeks have no byes?**  
 Yes, when the total number of teams exactly matches the available weekly playing slots. The current version does not support changing the number of playing slots from week to week within the same schedule.
+
+**How big is this file?**
+The current HTML application is approximately **51 KB (less than 0.1 MB)**. Downloaded JPGs, ZIPs, spreadsheets, and backups are separate files and may be larger.
 
 **What are all these file types?**  
 - `.html` — the LeagueMate application.
