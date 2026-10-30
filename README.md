@@ -1,4 +1,4 @@
-# LeagueMate
+# 🎯 LeagueMate
 
 **A simple dart league scheduling tool**  
 Created by Laine Watts ([@MadJulip](https://github.com/madjulip))  
@@ -18,7 +18,7 @@ You can use LeagueMate in either of two ways:
 
 ### What is an HTML file?
 
-Think of it like a PDF saved on your computer: you can double-click the file and open it in a browser. Unlike a PDF, LeagueMate is interactive. You can enter team names, create schedules, and download the results. The HTML file **is the application**; the browser is simply the tool used to open it.
+Think of it like a PDF saved on your computer: you can double-click the file and open it in a browser. Unlike a PDF, LeagueMate is interactive. You can enter team names, create schedules, and download the results. The HTML file **is the application**; the website is simply another way to open it.
 
 The current HTML application is approximately **51 KB (less than 0.1 MB)**. Downloaded JPGs, ZIPs, spreadsheets, and backups are separate files and may be larger.
 
@@ -35,6 +35,8 @@ The current HTML application is approximately **51 KB (less than 0.1 MB)**. Down
 **How scheduling works:** Each board accommodates two teams, and each team plays on only one day per week. LeagueMate fills every board on each scheduled day. For example, one day with four boards requires eight teams. If the league has exactly enough teams for its weekly playing slots, there are **no byes**. Otherwise, the remaining teams have a bye that week. The current version uses the same number of playing days and boards each week.
 
 ## Downloading schedules
+
+> **Important — exports are for the selected league only.** If you have both A-League and B-League, choose A-League and download its schedule, then switch to B-League and download its schedule separately. **Export League Backup** also saves only the currently selected league, not both leagues together.
 
 | Option | What you receive | Best for |
 | --- | --- | --- |
@@ -122,4 +124,3 @@ After you finish a schedule, **Save My Settings**, **Export League Backup** (onc
 
 **LeagueMate** · Created by Laine Watts ([@MadJulip](https://github.com/madjulip))  
 *The schedule has spoken.*
-
