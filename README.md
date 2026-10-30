@@ -18,7 +18,7 @@ You can use LeagueMate in either of two ways:
 
 ### What is an HTML file?
 
-Think of it like a PDF saved on your computer: you can double-click the file and open it in a browser. Unlike a PDF, LeagueMate is interactive. You can enter team names, create schedules, and download the results. The HTML file **is the application**; the website is simply another way to open it.
+Think of it like a PDF saved on your computer: you can double-click the file and open it in a browser. Unlike a PDF, LeagueMate is interactive. You can enter team names, create schedules, and download the results. The HTML file **is the application**; the browser is simply the tool used to open it.
 
 The current HTML application is approximately **51 KB (less than 0.1 MB)**. Downloaded JPGs, ZIPs, spreadsheets, and backups are separate files and may be larger.
 
