@@ -6,19 +6,21 @@ Created by Laine Watts ([@MadJulip](https://github.com/madjulip))
 
 LeagueMate helps organize dart leagues by creating season schedules, assigning teams to playing days and boards, and preparing schedules to download and share. No account, coding knowledge, or software installation is required.
 
-**Open LeagueMate online:** https://madjulip.github.io/LeagueMate/
-
-## Getting started: website or saved file
+## Getting started: link or saved file
 
 You can use LeagueMate in either of two ways:
 
-**Use the website:** Open the link above in a web browser such as Edge, Chrome, or Safari. You need internet access to load the website initially.
+**Use the link:** Open the link above in a web browser such as Edge, Chrome, or Safari. You need internet access to load the page initially.
 
-**Use a copy saved on your computer:** Download the `index.html` file, save it in a convenient folder (such as Documents), and double-click it in File Explorer. It opens in your default web browser, even without an internet connection. You do not need to install a separate program.
+> **Link to Open LeagueMate online:** https://madjulip.github.io/LeagueMate/
 
-### What is an HTML file?
+**Open a the Saved File from your Desktop:** Download the `LeagueMate.html` file, save it in a convenient folder (such as Documents), and double-click it in File Explorer. It opens in your default web browser, even without an internet connection. You do not need to install a separate program.
 
-Think of it like a PDF saved on your computer: you can double-click the file and open it in a browser. Unlike a PDF, LeagueMate is interactive. You can enter team names, create schedules, and download the results. The HTML file **is the application**; the website is simply another way to open it.
+### Is this a Website?
+
+No. The 'LeagueMate.html' file will work similarly to a PDF saved on your computer: you can open the file from your desktop and it will open your web browser. You will see a URL in the address bar, but it's not actually using the internet. The LeagueMate file will behave similarly, and will not require internet access. 
+
+The only time you will need internet is when using the LeagueMate link: https://madjulip.github.io/LeagueMate/.
 
 The current HTML application is approximately **51 KB (less than 0.1 MB)**. Downloaded JPGs, ZIPs, spreadsheets, and backups are separate files and may be larger.
 
