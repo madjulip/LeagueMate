@@ -268,7 +268,7 @@ $('weekSelect').addEventListener('change',renderWeek);$('nightSelect').addEventL
 $('historyTeam').addEventListener('change',renderHistory);$('historyThrough').addEventListener('change',renderHistory);
 $('save').addEventListener('click',save);
 $('exportJSON').addEventListener('click',()=>{
- const leagueName=(leagueRecords[activeLeague]?.name||'Dart League').trim();
+ const leagueName=($('leagueName').value||leagueRecords[activeLeague]?.name||'Dart League').trim();
  const safeName=leagueName.replace(/[^a-z0-9_-]+/gi,'-').replace(/^-+|-+$/g,'')||'Dart-League';
  download(backup(),`${safeName}-backup.json`,'application/json');
 });
