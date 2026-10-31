@@ -18,12 +18,14 @@ You can use LeagueMate in either of two ways:
 
 ### Is this a Website?
 
-No. If you are unfamiliar with HTML, there is one important distinction I'd like to emphasize: an HTML file isn't quite like a Word document where you save changes directly to the file. Instead, your team names and schedules are saved locally in your web browser, similar to how your browser might save and remember your email or username login. Your league information isn't being sent to me or stored on GitHub, it is only stored on your browser.
+No. If you are unfamiliar with HTML, there is one important distinction I'd like to emphasize: while the file can be stored on your desktop, it isn't like a Word document where you save changes directly to the file. 
+
+Instead, your team names and schedules are **saved locally in your web browser,** similar to how your browser might save and remember your email or username login. Your league information isn't being sent to me or stored on GitHub, it is only stored on your browser.
 
 The catch? Browser storage isn't guaranteed to last forever. And switching browsers or computers, clearing browser history, or moving the downloaded HTML file could reset the LeagueMate settings making them no longer available.
 
 
-I would recommend thinking of it like a PDF: you can open the file from your desktop and it will open your web browser. You will see a URL in the address bar, but it's not actually using the internet. While you can make changes to the scheduler in your browser, unlike a PDF, the "Save My Settings" button **does not guarantee its always saved.** Switching browsers, accessing it from a different computer, or clearing cache will likely reset the webpage, **so it's important to export backups** if you want to reference back to a specific schedule. You can export and import backups easily under the LeagueMate Step 2 section.
+LeagueMate will behave similar to a PDF: you download the file, double click on it from your desktop and it will open your web browser. You will see a URL in the address bar, but the file is not actually using the internet. While you can make changes to the scheduler in your browser, unlike a PDF, the "Save My Settings" button **does not guarantee its always saved.** Switching browsers, accessing it from a different computer, or clearing cache will likely reset the webpage, **so it's important to export backups** if you want to reference back to a specific schedule. You can export and import backups easily under the LeagueMate Step 2 section.
 
 > **If the link is unavailable:** Your saved HTML copy can still open and run locally. Keep a copy on your computer if you want that fallback.
 
