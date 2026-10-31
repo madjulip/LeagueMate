@@ -4,7 +4,7 @@
 Created by Laine Watts ([@MadJulip](https://github.com/madjulip))  
 *The schedule has spoken.*
 
-LeagueMate helps organize dart leagues by creating season schedules, assigning teams to playing days and boards, and preparing schedules to download and share. No account, coding knowledge, or software installation is required.
+LeagueMate is an offline tool initially developed to create season schedules for dart leagues: assigning teams to playing days and boards, preparing schedules to download and share. No account, coding knowledge, or software installation is required.
 
 ## Getting started:
 
@@ -14,11 +14,11 @@ You can use LeagueMate in either of two ways:
 
 **OR**
 
-**Open a the Saved File from your Desktop:** Download the `LeagueMate.html` file, save it in a convenient folder (such as Documents), and double-click it in File Explorer. It opens in your default web browser, even without an internet connection. You do not need to install a separate program.
+**Download and Open the File from your Desktop:** Download the `LeagueMate.html` file, save it in a convenient folder (such as Documents), and double-click it in File Explorer. It opens in your default web browser, even without an internet connection.
 
 ### Is this a Website?
 
-No. The 'LeagueMate.html' file will work similarly to a PDF saved on your computer: you can open the file from your desktop and it will open your web browser. You will see a URL in the address bar, but it's not actually using the internet. Unlike a PDF, there's no 'Save' button. Any schedules you create are automatically saved in your web browser, **but this does not guarantee its always saved.** Switching browsers, switching computers or clearing cache will remove any existing schedules, **so it's important to export backups** if you want to reference a specific schedule. You can export and import backups easily under the LeagueMate Step 2 section.
+No. If you are unfamiliar with HTML, I would recommend thinking of it like a PDF: you can open the file from your desktop and it will open your web browser. You will see a URL in the address bar, but it's not actually using the internet. Unlike a PDF, while you can make changes to the scheduler in your browser, the "Save My Settings" button **does not guarantee its always saved.** Switching browsers, accessing it from a different computer, or clearing cache will likely reset the webpage, **so it's important to export backups** if you want to reference back to a specific schedule. You can export and import backups easily under the LeagueMate Step 2 section.
 
 > **If the link is unavailable:** Your saved HTML copy can still open and run locally. Keep a copy on your computer if you want that fallback.
 
