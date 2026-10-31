@@ -286,34 +286,65 @@ function renderDayCanvas(weekIndex,dayIndex,title){
  const week=season[weekIndex],night=week.nights[dayIndex],boards=settings.boards,rounds=night.rounds.length;
  const W=1600,H=980,canvas=document.createElement('canvas');canvas.width=W;canvas.height=H;
  const ctx=canvas.getContext('2d');if(!ctx){$('jpgStatus').textContent='This browser cannot create the JPG image.';return;}
- const purple='#79009F',pale='#F1E4FA',white='#FFFFFF',black='#111111';
- const headerH=200,bandH=34,tableY=headerH+bandH,headH=88,sideW=290,rowH=(H-tableY-headH-20)/rounds;
+ // Emerald-green TV schedule. All graphics are drawn locally, including the dartboard.
+ const emerald='#07583F',deep='#064832',mint='#D9F4E9',light='#EAF9F3',white='#FFFFFF',ink='#092D23';
+ const sideW=290,headerH=210,bandH=20,tableY=headerH+bandH,headH=86;
+ const rowH=(H-tableY-headH-42)/rounds;
  const font=(weight,size)=>`${weight} ${size}px Arial, Helvetica, sans-serif`;
  function rect(x,y,w,h,color){ctx.fillStyle=color;ctx.fillRect(x,y,w,h)}
- function text(value,x,y,size=37,color=black,weight='bold',align='center'){
+ function text(value,x,y,size=37,color=ink,weight='bold',align='center'){
   ctx.fillStyle=color;ctx.font=font(weight,size);ctx.textAlign=align;ctx.textBaseline='middle';ctx.fillText(String(value),x,y);
  }
- function fitted(value,x,y,maxWidth,maxSize=54,minSize=24,color=black){
-  let size=maxSize;ctx.font=font('bold',size);while(size>minSize&&ctx.measureText(value).width>maxWidth){size-=2;ctx.font=font('bold',size)}text(value,x,y,size,color);
+ function fitted(value,x,y,maxWidth,maxSize=54,minSize=22,color=ink){
+  let size=maxSize;ctx.font=font('bold',size);
+  while(size>minSize&&ctx.measureText(String(value)).width>maxWidth){size-=2;ctx.font=font('bold',size)}
+  text(value,x,y,size,color);
  }
- rect(0,0,W,H,white);rect(0,0,sideW,headerH,purple);rect(sideW,0,W-sideW,headerH,pale);
- text('Week: '+week.week,sideW/2,75,42,white);
- text(dayLabel(dayIndex),sideW/2,142,40,white);
- fitted(title,sideW+(W-sideW)/2,51,W-sideW-50,57,30);
- text('Byes for week: '+(week.byes.length?week.byes.map(t=>t+1).join(', '):'none'),sideW+(W-sideW)/2,117,34);
+ function dartboard(cx,cy,r){
+  ctx.save();ctx.translate(cx,cy);
+  // Traditional alternating dartboard sectors; no darts or dart shafts.
+  ctx.fillStyle=deep;ctx.beginPath();ctx.arc(0,0,r+7,0,Math.PI*2);ctx.fill();
+  for(let i=0;i<20;i++){
+   const start=-Math.PI/2+(i-.5)*Math.PI/10,end=start+Math.PI/10;
+   for(const [inner,outer,color] of [
+    [0.57,0.90,i%2?white:ink],[0.90,0.99,i%2?emerald:'#C56C53'],
+    [0.18,0.57,i%2?ink:white],[0.13,0.18,i%2?emerald:'#C56C53']
+   ]){
+    ctx.beginPath();ctx.arc(0,0,r*outer,start,end);ctx.arc(0,0,r*inner,end,start,true);
+    ctx.closePath();ctx.fillStyle=color;ctx.fill();
+   }
+  }
+  ctx.beginPath();ctx.arc(0,0,r*.13,0,Math.PI*2);ctx.fillStyle=emerald;ctx.fill();
+  ctx.beginPath();ctx.arc(0,0,r*.055,0,Math.PI*2);ctx.fillStyle='#C56C53';ctx.fill();
+  ctx.strokeStyle=deep;ctx.lineWidth=5;ctx.beginPath();ctx.arc(0,0,r+2,0,Math.PI*2);ctx.stroke();
+  ctx.restore();
+ }
+ rect(0,0,W,H,white);
+ rect(0,0,sideW,headerH,emerald);
+ rect(sideW,0,W-sideW,headerH,light);
+ text('Week: '+week.week,sideW/2,48,45,white);
+ fitted(dayLabel(dayIndex),sideW/2,112,sideW-20,43,27,white);
+ // The scheduler has no host-team setting, so don't invent a host number.
+ dartboard(sideW+118,headerH/2,80);
+ const infoX=sideW+230,infoW=W-infoX;
+ fitted(title,infoX+infoW/2,48,infoW-40,59,28,deep);
+ fitted('Byes for week: '+(week.byes.length?week.byes.map(t=>t+1).join(', '):'none'),infoX+infoW/2,111,infoW-35,36,21,deep);
  const active=night.teams.map(t=>t+1).sort((a,b)=>a-b);
- fitted('Teams: '+active.join(', '),sideW+(W-sideW)/2,166,W-sideW-48,38,24);
- rect(0,headerH,W,bandH,white);rect(0,tableY, W,headH,purple);
- for(let b=0;b<boards;b++)text('Board '+(b+1),sideW+(b+.5)*(W-sideW)/boards,tableY+headH/2,38,white);
+ fitted('Teams: '+active.join(','),infoX+infoW/2,166,infoW-35,36,21,deep);
+ rect(0,headerH,W,bandH,white);
+ rect(0,tableY,W,headH,emerald);
+ for(let b=0;b<boards;b++){
+  const cell=(W-sideW)/boards;
+  fitted('Board '+(b+1),sideW+(b+.5)*cell,tableY+headH/2,cell-15,40,19,white);
+ }
  for(let r=0;r<rounds;r++){
   const y=tableY+headH+r*rowH;
-  rect(0,y,sideW,rowH,purple);rect(sideW,y,W-sideW,rowH,r%2===0?white:pale);
-  text('Round '+(r+1),sideW/2,y+rowH/2,37,white);
+  rect(0,y,sideW,rowH,emerald);
+  rect(sideW,y,W-sideW,rowH,r%2===0?white:mint);
+  fitted('Round '+(r+1),sideW/2,y+rowH/2,sideW-24,39,21,white);
   for(const game of night.rounds[r]){
-   const x=sideW+(game.board-.5)*(W-sideW)/boards;
-   const pair=`(${game.a+1},${game.b+1})`;
-   const cell=(W-sideW)/boards-12;
-   fitted(pair,x,y+rowH/2,cell,37,22);
+   const cell=(W-sideW)/boards,x=sideW+(game.board-.5)*cell;
+   fitted(`(${game.a+1},${game.b+1})`,x,y+rowH/2,cell-14,37,20,ink);
   }
  }
  return canvas;
