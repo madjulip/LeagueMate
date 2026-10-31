@@ -71,7 +71,7 @@ button.backup-button:hover{background:#D8DFDA}
 <div id="generateStatus" class="note hidden" role="status" aria-live="polite"></div><p id="saveStatus" class="muted" role="status" aria-live="polite">Unsaved changes</p>
 <div class="actions"><button id="generate" class="primary-action">Create My Schedule</button><button class="secondary" id="save">Save My Settings</button></div>
 <p class="spreadsheet-hint"><strong>Want a spreadsheet of the league's schedule?</strong> Click “Create My Schedule”. The green <strong>Download Schedule (Spreadsheet)</strong> button will appear in Step 3.</p>
-<div class="backup-tools"><strong>Optional: Keep a backup of your league</strong><p class="muted">Save a backup of your league information and schedule to import later. This downloads a JSON file, <strong>not</strong> the schedule spreadsheet.</p><div class="actions"><button class="backup-button" id="exportJSON">Export League Backup</button><button class="backup-button" id="importJSON">Import League Backup</button><input id="importFile" type="file" accept=".json,application/json" class="hidden"></div></div>
+<div class="backup-tools"><strong>Optional: Keep a backup of your league</strong><p class="muted">Save a backup of the selected league’s name, information, and schedule to import later. This downloads a JSON file, <strong>not</strong> the schedule spreadsheet.</p><div class="actions"><button class="backup-button" id="exportJSON">Export League Backup</button><button class="backup-button" id="importJSON">Import League Backup</button><input id="importFile" type="file" accept=".json,application/json" class="hidden"></div></div>
 <p class="muted">“Save My Settings” saves your work in this browser without downloading a file.</p></section>
 <section id="results" class="hidden">
 <section class="panel"><h2 class="step-heading">Step 3: Download your schedule</h2>
@@ -232,7 +232,7 @@ function currentBackup(){
  const matching=!!season&&sameConfig(c,settings)&&names.length===c.teams;
  return {version:2,settings:c,names:names.slice(),season:matching?season:null};
 }
-function backup(){return JSON.stringify(currentBackup(),null,2)}
+function backup(){return JSON.stringify({...currentBackup(),leagueName:leagueRecords[activeLeague].name},null,2)}
 function save(){storeActive();if(persistLeagues())$('saveStatus').textContent='Saved on this device · '+new Date().toLocaleTimeString();else alert('Browser storage is unavailable. Use Export League Backup instead.')}
 function restore(data){
  if(!data||!data.settings||!Array.isArray(data.names))throw Error('Missing league settings or team names');
@@ -269,7 +269,7 @@ $('historyTeam').addEventListener('change',renderHistory);$('historyThrough').ad
 $('save').addEventListener('click',save);
 $('exportJSON').addEventListener('click',()=>download(backup(),'dart-league-backup.json','application/json'));
 $('importJSON').addEventListener('click',()=>$('importFile').click());
-$('importFile').addEventListener('change',async e=>{const f=e.target.files[0];if(!f)return;try{const imported=JSON.parse(await f.text());const other=leagueRecords.reduce((n,l,i)=>n+(i===activeLeague?0:Number(l.data.settings.teams)||0),0);if(imported.settings&&other+Number(imported.settings.teams)>MAX_COMBINED_TEAMS)throw Error('The imported league would exceed the 28-team combined limit.');restore(imported);save();refreshLeagueUI();alert('Backup imported successfully')}catch(err){alert('Could not import backup: '+err.message)}e.target.value=''});
+$('importFile').addEventListener('change',async e=>{const f=e.target.files[0];if(!f)return;try{const imported=JSON.parse(await f.text());const other=leagueRecords.reduce((n,l,i)=>n+(i===activeLeague?0:Number(l.data.settings.teams)||0),0);if(imported.settings&&other+Number(imported.settings.teams)>MAX_COMBINED_TEAMS)throw Error('The imported league would exceed the 28-team combined limit.');restore(imported);if(typeof imported.leagueName==='string'&&imported.leagueName.trim()){leagueRecords[activeLeague].name=imported.leagueName.trim().slice(0,60);$('tvTitle').value=leagueRecords[activeLeague].name;}save();refreshLeagueUI();alert('Backup imported successfully')}catch(err){alert('Could not import backup: '+err.message)}e.target.value=''});
 $('helpToggle').addEventListener('click',()=>{const panel=$('helpPanel'),open=panel.hidden;panel.hidden=!open;$('helpToggle').setAttribute('aria-expanded',String(open));$('helpArrow').textContent=open?'Hide instructions ▴':'Show instructions ▾'});
 // Render the selected playing day to a self-contained JPEG, without external libraries.
 function jpgOptions(){
