@@ -61,7 +61,7 @@ button.backup-button:hover{background:#D8DFDA}
 </div></section>
 <section class="panel" id="leagueManager"><div class="league-head"><h2 class="step-heading">Your Schedules</h2><button id="addLeague" class="secondary" type="button">+ Add Another League</button></div><p class="muted">Start with one schedule. Add a second if your teams play in separate leagues. Each schedule is saved independently.</p><div class="league-tabs" id="leagueTabs" role="group" aria-label="Choose schedule"></div><div class="league-name-row"><div><label for="leagueName">Schedule name</label><input id="leagueName" maxlength="60" value="Dart League" placeholder="e.g. A-League"></div><button id="removeLeague" type="button" class="secondary hidden">Remove Second League</button></div><div id="leagueSummary" class="note league-summary" role="status"></div></section>
 <section class="panel setup-fields"><h2 class="step-heading">Step 1: Set up your league</h2><div class="grid">
-<div><label for="teamCount">Teams</label><input id="teamCount" type="number" min="2" max="80" step="2" value="28"></div>
+<div><label for="teamCount">Teams</label><input id="teamCount" type="number" min="2" max="50" step="2" value="28"></div>
 <div><label for="days">Nights per week</label><input id="days" type="number" min="1" max="7" value="3"></div>
 <div><label for="boards">Boards per day</label><input id="boards" type="number" min="1" max="12" value="4"></div>
 <div><label for="weeks">Season weeks</label><input id="weeks" type="number" min="1" max="52" value="12"></div>
@@ -88,7 +88,7 @@ button.backup-button:hover{background:#D8DFDA}
 'use strict';
 const $=id=>document.getElementById(id);
 let names=[],nameHistory=[],season=null,settings=null;
-const MULTI_KEY='dartLeagueScheduler.multi.v1',LEGACY_KEY='dartLeagueScheduler.v1',MAX_COMBINED_TEAMS=28;
+const MULTI_KEY='dartLeagueScheduler.multi.v1',LEGACY_KEY='dartLeagueScheduler.v1',MAX_COMBINED_TEAMS=50;
 let leagueRecords=[],activeLeague=0;
 function blankLeague(name='Dart League',teams=8){return {name,data:{version:2,settings:{teams,days:1,boards:4,weeks:12,startDate:'',dayNames:['Monday']},names:Array.from({length:teams},(_,i)=>`Team ${i+1}`),season:null},jpgTitle:''}}
 function storeActive(){if(!leagueRecords.length)return;leagueRecords[activeLeague].data=currentBackup();leagueRecords[activeLeague].jpgTitle=$('tvTitle').value;}
@@ -103,8 +103,8 @@ $('tvTitle').value=leagueRecords[activeLeague].name;refreshLeagueUI();persistLea
 
 const escapeHTML=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function config(){return {teams:Number($('teamCount').value),days:Number($('days').value),boards:Number($('boards').value),weeks:Number($('weeks').value),startDate:$('startDate').value,dayNames:$('dayNames').value.split(',').map(s=>s.trim()).filter(Boolean)}}
-function validate(c){if(![c.teams,c.days,c.boards,c.weeks].every(Number.isInteger))return 'Enter whole numbers in every numeric field.';if(c.teams<2||c.teams>80||c.teams%2)return 'Team count must be an even number from 2 to 80.';if(c.days<1||c.days>7||c.boards<1||c.boards>12||c.weeks<1||c.weeks>52)return 'Check the allowed ranges for nights, boards, and weeks.';if(c.teams<c.days*c.boards*2)return 'This version fills every board on every night. Reduce nights/boards or increase teams.';return ''}
-function syncNames(){const n=Number($('teamCount').value);if(!Number.isInteger(n)||n<2||n>80||n%2)return;names.forEach((name,i)=>{nameHistory[i]=name});names=Array.from({length:n},(_,i)=>nameHistory[i]??`Team ${i+1}`);renderNames();capacity()}
+function validate(c){if(![c.teams,c.days,c.boards,c.weeks].every(Number.isInteger))return 'Enter whole numbers in every numeric field.';if(c.teams<2||c.teams>50||c.teams%2)return 'Team count must be an even number from 2 to 50.';if(c.days<1||c.days>7||c.boards<1||c.boards>12||c.weeks<1||c.weeks>52)return 'Check the allowed ranges for nights, boards, and weeks.';if(c.teams<c.days*c.boards*2)return 'This version fills every board on every night. Reduce nights/boards or increase teams.';return ''}
+function syncNames(){const n=Number($('teamCount').value);if(!Number.isInteger(n)||n<2||n>50||n%2)return;names.forEach((name,i)=>{nameHistory[i]=name});names=Array.from({length:n},(_,i)=>nameHistory[i]??`Team ${i+1}`);renderNames();capacity()}
 function renderNames(){const root=$('teams');root.replaceChildren();names.forEach((name,i)=>{let input=document.createElement('input');input.value=name;input.setAttribute('aria-label',`Team ${i+1} name`);input.addEventListener('input',()=>{names[i]=input.value;nameHistory[i]=input.value;markChanged(false)});root.append(input)})}
 function capacity(){const c=config(),err=validate(c),active=c.days*c.boards*2,byes=c.teams-active;$('capacityNote').className='note'+(err?' warning':'');$('capacityNote').textContent=err||`${active} teams play weekly (${c.boards*2} per night), ${byes} teams have a bye. ${c.boards*2-1} rounds per night, ${c.boards*(c.boards*2-1)} matches per night.`}
 function rand(n){return Math.floor(Math.random()*n)}
@@ -277,7 +277,7 @@ function restore(data){
 }
 function csvCell(s){return '"'+String(s).replace(/"/g,'""')+'"'}
 function exportCSV(){if(!season)return;const rows=[['Week','Night','Date','Round','Board','Team A','Team B']];for(const w of season)for(const nt of w.nights)for(let r=0;r<nt.rounds.length;r++)for(const g of nt.rounds[r])rows.push([w.week,dayLabel(nt.day),dateLabel(w.week,nt.day),r+1,g.board,displayName(g.a),displayName(g.b)]);download(rows.map(r=>r.map(csvCell).join(',')).join('\r\n'),'dart-league-schedule.csv','text/csv;charset=utf-8')}
-$('teamCount').addEventListener('input',()=>{const n=Number($('teamCount').value);if(Number.isInteger(n)&&n>=2&&n<=80&&n%2){syncNames();markChanged(true);refreshLeagueUI()}else capacity()});
+$('teamCount').addEventListener('input',()=>{const n=Number($('teamCount').value);if(Number.isInteger(n)&&n>=2&&n<=50&&n%2){syncNames();markChanged(true);refreshLeagueUI()}else capacity()});
 ['days','boards','weeks','startDate','dayNames'].forEach(id=>$(id).addEventListener('input',()=>{capacity();markChanged(true)}));
 $('resetNames').addEventListener('click',()=>{names=names.map((_,i)=>`Team ${i+1}`);nameHistory=names.slice();renderNames();markChanged(false)});
 $('generate').addEventListener('click',()=>{
@@ -298,7 +298,7 @@ $('exportJSON').addEventListener('click',()=>{
  download(backup(),`${safeName}-backup.json`,'application/json');
 });
 $('importJSON').addEventListener('click',()=>$('importFile').click());
-$('importFile').addEventListener('change',async e=>{const f=e.target.files[0];if(!f)return;try{const imported=JSON.parse(await f.text());const other=leagueRecords.reduce((n,l,i)=>n+(i===activeLeague?0:Number(l.data.settings.teams)||0),0);if(imported.settings&&other+Number(imported.settings.teams)>MAX_COMBINED_TEAMS)throw Error('The imported league would exceed the 28-team combined limit.');restore(imported);if(typeof imported.leagueName==='string'&&imported.leagueName.trim()){leagueRecords[activeLeague].name=imported.leagueName.trim().slice(0,60);$('tvTitle').value=leagueRecords[activeLeague].name;}save();refreshLeagueUI();alert('Backup imported successfully')}catch(err){alert('Could not import backup: '+err.message)}e.target.value=''});
+$('importFile').addEventListener('change',async e=>{const f=e.target.files[0];if(!f)return;try{const imported=JSON.parse(await f.text());const other=leagueRecords.reduce((n,l,i)=>n+(i===activeLeague?0:Number(l.data.settings.teams)||0),0);if(imported.settings&&other+Number(imported.settings.teams)>MAX_COMBINED_TEAMS)throw Error(`The imported league would exceed the ${MAX_COMBINED_TEAMS}-team combined limit.`);restore(imported);if(typeof imported.leagueName==='string'&&imported.leagueName.trim()){leagueRecords[activeLeague].name=imported.leagueName.trim().slice(0,60);$('tvTitle').value=leagueRecords[activeLeague].name;}save();refreshLeagueUI();alert('Backup imported successfully')}catch(err){alert('Could not import backup: '+err.message)}e.target.value=''});
 $('helpToggle').addEventListener('click',()=>{const panel=$('helpPanel'),open=panel.hidden;panel.hidden=!open;$('helpToggle').setAttribute('aria-expanded',String(open));$('helpArrow').textContent=open?'Hide instructions ▴':'Show instructions ▾'});
 // Render the selected playing day to a self-contained JPEG, without external libraries.
 function jpgOptions(){
@@ -453,7 +453,7 @@ $('jpgRange').addEventListener('change',()=>{$('downloadJPGChoice').textContent=
 $('downloadJPGChoice').addEventListener('click',()=>{const range=$('jpgRange').value;if(range==='day')exportDayJPG();else exportJPGZip(range)});
 
 $('csv').addEventListener('click',exportCSV);
-$('addLeague').addEventListener('click',()=>{if(leagueRecords.length>=2)return;storeActive();const remaining=MAX_COMBINED_TEAMS-(Number($('teamCount').value)||0);if(remaining<2){alert('Reduce the first schedule to 26 teams or fewer before adding another league.');return}const nextTeams=Math.min(8,remaining%2===0?remaining:remaining-1);leagueRecords.push(blankLeague('B-League',nextTeams));if(leagueRecords[0].name==='Dart League')leagueRecords[0].name='A-League';persistLeagues();switchLeague(1)});
+$('addLeague').addEventListener('click',()=>{if(leagueRecords.length>=2)return;storeActive();const remaining=MAX_COMBINED_TEAMS-(Number($('teamCount').value)||0);if(remaining<2){alert(`Reduce the first schedule to ${MAX_COMBINED_TEAMS-2} teams or fewer before adding another league.`);return}const nextTeams=Math.min(8,remaining%2===0?remaining:remaining-1);leagueRecords.push(blankLeague('B-League',nextTeams));if(leagueRecords[0].name==='Dart League')leagueRecords[0].name='A-League';persistLeagues();switchLeague(1)});
 $('removeLeague').addEventListener('click',()=>{if(leagueRecords.length<2)return;if(!confirm('Remove the second league and its saved schedule from this browser? Export its backup first if you want to keep it.'))return;storeActive();leagueRecords.splice(1,1);activeLeague=0;restore(leagueRecords[0].data);$('tvTitle').value=leagueRecords[0].name;refreshLeagueUI();persistLeagues()});
 $('leagueName').addEventListener('input',()=>{leagueRecords[activeLeague].name=$('leagueName').value.trim()||`Schedule ${activeLeague+1}`;Array.from($('leagueTabs').children)[activeLeague].textContent=leagueRecords[activeLeague].name;$('tvTitle').value=leagueRecords[activeLeague].name;persistLeagues()});
 $('tvTitle').addEventListener('change',()=>{storeActive();persistLeagues()});
