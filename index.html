@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#175A47">
-<title>LeagueMate: A Dart League Scheduler</title>
+<title>Dart League Scheduler</title>
 <style>
 :root{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#243B31;background:#F3FAF6}*{box-sizing:border-box}body{margin:0}header{background:#175A47;color:white;padding:22px max(18px,calc((100vw - 1120px)/2));display:flex;align-items:center;gap:12px}header h1{font-size:1.55rem;margin:0}header p{margin:4px 0 0;color:#DDF2E9;font-size:.88rem}.logo{font-size:2rem}main{max-width:1120px;margin:24px auto;padding:0 16px 45px}.panel{background:white;border:1px solid #D7E9DF;border-radius:14px;padding:20px;margin-bottom:18px;box-shadow:0 2px 9px #175A4712}h2{margin:0 0 14px;font-size:1.18rem}h3{margin:16px 0 9px;font-size:1rem}.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.grid.two{grid-template-columns:repeat(2,minmax(0,1fr))}label{display:block;font-weight:650;font-size:.82rem;margin-bottom:5px}input,select{width:100%;padding:10px;border:1px solid #B9D5C5;border-radius:8px;background:white;color:#243B31;font:inherit;min-width:0}input[type=number]{font-variant-numeric:tabular-nums}button{background:#25866A;border:0;color:white;border-radius:8px;padding:11px 15px;font:inherit;font-weight:700;cursor:pointer}button:hover{background:#1D7058}button.secondary{background:#DDF2E9;color:#174D3D}button.secondary:hover{background:#C8E8D9}button:disabled{opacity:.55;cursor:wait}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}.muted{color:#587568;font-size:.86rem}.note{padding:12px;background:#E5F5EC;border-radius:9px;font-size:.88rem;margin-top:12px}.warning{background:#fff1e5;color:#824518}.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.stat{background:#EAF6EF;padding:14px;border-radius:10px}.stat strong{font-size:1.5rem;display:block}.stat span{color:#587568;font-size:.8rem}.teams{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}.teams input{font-size:.87rem}.tabs{display:flex;gap:7px;flex-wrap:wrap;margin:14px 0}.tab{background:#DDF2E9;color:#174D3D}.tab.active{background:#25866A;color:white}.matchtable{width:100%;border-collapse:collapse}.matchtable th,.matchtable td{text-align:left;padding:10px;border-bottom:1px solid #E3EEE7;font-size:.91rem}.matchtable th{background:#F1F8F3}.round{border:1px solid #D5E9DD;border-radius:10px;margin:9px 0;overflow:hidden}.round summary{cursor:pointer;padding:12px 14px;background:#EAF6EF;font-weight:700}.round table{width:100%}.pill{display:inline-block;background:#D6F0E2;border-radius:99px;padding:5px 10px;font-size:.83rem}.history-table{width:100%;border-collapse:collapse;font-size:.82rem}.history-table th,.history-table td{padding:6px;text-align:center;border:1px solid #D5E9DD;min-width:28px}.history-table th{background:#E0F1E7;position:sticky;top:0}.history-table td.zero{background:#F2F8F4}.history-table td.one{background:#CBEEE1}.history-table td.two{background:#ffedba}.history-table td.many{background:#f5c8c6}.scroll{overflow:auto;max-height:550px}.hidden{display:none!important}.inline{display:flex;gap:12px;align-items:center;flex-wrap:wrap}.inline>*{flex:1}footer{color:#60786B;text-align:center;font-size:.78rem;padding:16px} @media(max-width:720px){.grid,.teams,.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.panel{padding:15px}header{padding:20px 16px}.matchtable td{font-size:.84rem}}@media(max-width:390px){.grid,.teams{grid-template-columns:1fr}}
 /* Equal-width setup fields with extra breathing room between them. */
@@ -37,7 +37,7 @@ button.backup-button:hover{background:#D8DFDA}
 </style>
 </head>
 <body>
-<header><div class="logo">🎯</div><div><h1>LeagueMate | Schedule Your Teams </h1><p>Created by Laine Watts (@MadJulip) · v1.1.0</p><p class="header-tagline">The schedule has spoken.</p></div></header>
+<header><div class="logo">🎯</div><div><h1>Dart League Scheduler</h1><p>Created by Laine Watts (@MadJulip) · v0.9.0</p><p class="header-tagline">The schedule has spoken.</p></div></header>
 <main>
 <section class="panel help-section"><button type="button" id="helpToggle" class="help-toggle" aria-expanded="false" aria-controls="helpPanel"><span>❔ How to Use LeagueMate</span><span id="helpArrow" aria-hidden="true">Show instructions ▾</span></button>
 <div id="helpPanel" class="help-panel" hidden>
@@ -87,7 +87,7 @@ button.backup-button:hover{background:#D8DFDA}
 <script>
 'use strict';
 const $=id=>document.getElementById(id);
-let names=[],season=null,settings=null;
+let names=[],nameHistory=[],season=null,settings=null;
 const MULTI_KEY='dartLeagueScheduler.multi.v1',LEGACY_KEY='dartLeagueScheduler.v1',MAX_COMBINED_TEAMS=28;
 let leagueRecords=[],activeLeague=0;
 function blankLeague(name='Dart League',teams=8){return {name,data:{version:2,settings:{teams,days:1,boards:4,weeks:12,startDate:'',dayNames:['Monday']},names:Array.from({length:teams},(_,i)=>`Team ${i+1}`),season:null},jpgTitle:''}}
@@ -104,8 +104,8 @@ $('tvTitle').value=leagueRecords[activeLeague].name;refreshLeagueUI();persistLea
 const escapeHTML=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function config(){return {teams:Number($('teamCount').value),days:Number($('days').value),boards:Number($('boards').value),weeks:Number($('weeks').value),startDate:$('startDate').value,dayNames:$('dayNames').value.split(',').map(s=>s.trim()).filter(Boolean)}}
 function validate(c){if(![c.teams,c.days,c.boards,c.weeks].every(Number.isInteger))return 'Enter whole numbers in every numeric field.';if(c.teams<2||c.teams>80||c.teams%2)return 'Team count must be an even number from 2 to 80.';if(c.days<1||c.days>7||c.boards<1||c.boards>12||c.weeks<1||c.weeks>52)return 'Check the allowed ranges for nights, boards, and weeks.';if(c.teams<c.days*c.boards*2)return 'This version fills every board on every night. Reduce nights/boards or increase teams.';return ''}
-function syncNames(){const n=Math.max(2,Math.min(80,Number($('teamCount').value)||28));names=Array.from({length:n},(_,i)=>names[i]??`Team ${i+1}`);renderNames();capacity()}
-function renderNames(){const root=$('teams');root.replaceChildren();names.forEach((name,i)=>{let input=document.createElement('input');input.value=name;input.setAttribute('aria-label',`Team ${i+1} name`);input.addEventListener('input',()=>{names[i]=input.value;markChanged(false)});root.append(input)})}
+function syncNames(){const n=Number($('teamCount').value);if(!Number.isInteger(n)||n<2||n>80||n%2)return;names.forEach((name,i)=>{nameHistory[i]=name});names=Array.from({length:n},(_,i)=>nameHistory[i]??`Team ${i+1}`);renderNames();capacity()}
+function renderNames(){const root=$('teams');root.replaceChildren();names.forEach((name,i)=>{let input=document.createElement('input');input.value=name;input.setAttribute('aria-label',`Team ${i+1} name`);input.addEventListener('input',()=>{names[i]=input.value;nameHistory[i]=input.value;markChanged(false)});root.append(input)})}
 function capacity(){const c=config(),err=validate(c),active=c.days*c.boards*2,byes=c.teams-active;$('capacityNote').className='note'+(err?' warning':'');$('capacityNote').textContent=err||`${active} teams play weekly (${c.boards*2} per night), ${byes} teams have a bye. ${c.boards*2-1} rounds per night, ${c.boards*(c.boards*2-1)} matches per night.`}
 function rand(n){return Math.floor(Math.random()*n)}
 function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=rand(i+1);[a[i],a[j]]=[a[j],a[i]]}return a}
@@ -161,6 +161,31 @@ for(let step=0;step<moves;step++){
  if(step%650===649){current=champion.map(w=>({byes:w.byes.slice(),groups:w.groups.map(g=>g.slice())}));currentScore=championScore}
 }
 best=champion;
+// Enforce mathematically even bye totals (difference of at most one).
+// Swap an over-assigned bye team with an under-assigned active team in the
+// same week, retaining each week's active capacity and round-robin structure.
+const byeTotals=Array(n).fill(0);
+for(const week of best)for(const t of week.byes)byeTotals[t]++;
+const floorByes=Math.floor(byesPerWeek*c.weeks/n),ceilByes=Math.ceil(byesPerWeek*c.weeks/n);
+let balanceSteps=0;
+while(Math.max(...byeTotals)-Math.min(...byeTotals)>1){
+ const high=Math.max(...byeTotals),low=Math.min(...byeTotals);
+ let swapDone=false;
+ for(let w=0;w<best.length&&!swapDone;w++){
+  const week=best[w];
+  const byeIndex=week.byes.findIndex(t=>byeTotals[t]===high);
+  if(byeIndex<0)continue;
+  for(const group of week.groups){
+   const activeIndex=group.findIndex(t=>byeTotals[t]===low);
+   if(activeIndex<0)continue;
+   const off=week.byes[byeIndex],on=group[activeIndex];
+   week.byes[byeIndex]=on;group[activeIndex]=off;
+   byeTotals[off]--;byeTotals[on]++;swapDone=true;break;
+  }
+ }
+ if(!swapDone||++balanceSteps>n*c.weeks)throw Error('Could not balance bye weeks.');
+}
+if(byeTotals.some(v=>v<floorByes||v>ceilByes))throw Error('Bye distribution did not meet fairness limits.');
 return best.map((week,w)=>({week:w+1,byes:week.byes,nights:week.groups.map((group,d)=>({day:d,teams:group,rounds:pairings(group,c.boards)}))}))}
 function auditSchedule(schedule,c){
  const errors=[],n=c.teams, pairCounts=Array.from({length:n},()=>Array(n).fill(0)),byes=Array(n).fill(0),nightCounts=Array.from({length:n},()=>Array(c.days).fill(0)),boardCounts=Array.from({length:n},()=>Array(c.boards).fill(0));
@@ -215,7 +240,7 @@ function dateLabel(week,day){if(!settings.startDate)return '';const labels=['Sun
 function dayLabel(i){return settings.dayNames[i]||`Night ${i+1}`}
 function displayName(t){return names[t]||`Team ${t+1}`}
 function render(){if(!season)return;$('results').classList.remove('hidden');const a=auditSchedule(season,settings),n=settings.teams;renderAudit(a);
-const stats=[['Unique pairings',`${a.unique} / ${n*(n-1)/2}`],['Avg. opponents / team',(a.perTeam.reduce((x,y)=>x+y,0)/n).toFixed(1)],['Repeat matches',a.repeats],['Total matches',a.matches]];$('stats').innerHTML=stats.map(([label,val])=>`<div class="stat"><strong>${val}</strong><span>${label}</span></div>`).join('');$('fairness').textContent=`Bye weeks per team: ${a.byeRange.join('–')}. Unique opponents per team: ${a.opponentRange.join('–')}. Consecutive byes: ${a.consecutiveByes}.`;
+const stats=[['Unique pairings',`${a.unique} / ${n*(n-1)/2}`],['Avg. opponents / team',(a.perTeam.reduce((x,y)=>x+y,0)/n).toFixed(1)],['Repeat matches',a.repeats],['Total matches',a.matches]];$('stats').innerHTML=stats.map(([label,val])=>`<div class="stat"><strong>${val}</strong><span>${label}</span></div>`).join('');$('fairness').textContent=`Bye weeks per team: ${a.byeRange.join('–')}${a.byeRange[1]-a.byeRange[0]>1?' (UNBALANCED — regenerate the season)':' (balanced)'}. Unique opponents per team: ${a.opponentRange.join('–')}. Consecutive byes: ${a.consecutiveByes}.`;
 $('weekSelect').innerHTML=season.map((w,i)=>`<option value="${i}">Week ${w.week}</option>`).join('');$('nightSelect').innerHTML=Array.from({length:settings.days},(_,i)=>`<option value="${i}">${escapeHTML(dayLabel(i))}</option>`).join('');$('historyTeam').innerHTML=names.map((s,i)=>`<option value="${i}">${escapeHTML(s)}</option>`).join('');$('historyThrough').innerHTML=season.map((w,i)=>`<option value="${i+1}">Week ${i+1}</option>`).join('');$('historyThrough').value=String(season.length);renderWeek();renderHistory()}
 function renderWeek(){if(!season)return;const w=season[Number($('weekSelect').value)||0],d=Number($('nightSelect').value)||0,night=w.nights[d];$('nightSummary').innerHTML=`<strong>${escapeHTML(dayLabel(d))}${dateLabel(w.week,d)?' · '+dateLabel(w.week,d):''}</strong><br>Teams: ${night.teams.map(t=>escapeHTML(displayName(t))).join(', ')}<br><strong>Byes:</strong> ${w.byes.length?w.byes.map(t=>escapeHTML(displayName(t))).join(', '):'None'}`;$('rounds').innerHTML=night.rounds.map((round,i)=>`<details class="round" open><summary>Round ${i+1} · ${round.length} matches</summary><table class="matchtable"><thead><tr><th>Board</th><th>Matchup</th></tr></thead><tbody>${round.slice().sort((a,b)=>a.board-b.board).map(g=>`<tr><td>Board ${g.board}</td><td>${escapeHTML(displayName(g.a))} vs. ${escapeHTML(displayName(g.b))}</td></tr>`).join('')}</tbody></table></details>`).join('');$('weekOverview').innerHTML=`<table class="matchtable"><thead><tr><th>Night</th><th>Teams</th></tr></thead><tbody>${w.nights.map((nt,i)=>`<tr><td>${escapeHTML(dayLabel(i))}</td><td>${nt.teams.map(t=>escapeHTML(displayName(t))).join(', ')}</td></tr>`).join('')}</tbody></table>`}
 function renderHistory(){if(!season)return;const through=Number($('historyThrough').value)||season.length,m=hist(through),t=Number($('historyTeam').value)||0,rows=m[t].map((count,i)=>({i,count})).filter(x=>x.i!==t).sort((a,b)=>a.count-b.count||a.i-b.i);$('teamReport').innerHTML=`<p><strong>${escapeHTML(displayName(t))}</strong> is scheduled to play ${rows.filter(x=>x.count>0).length} of ${settings.teams-1} possible opponents.</p><div class="scroll"><table class="matchtable"><thead><tr><th>Opponent</th><th>Times scheduled</th></tr></thead><tbody>${rows.map(x=>`<tr><td>${escapeHTML(displayName(x.i))}</td><td>${x.count}</td></tr>`).join('')}</tbody></table></div>`;let html='<table class="history-table"><thead><tr><th>Team</th>'+names.map((_,i)=>`<th title="${escapeHTML(displayName(i))}">${i+1}</th>`).join('')+'</tr></thead><tbody>';for(let i=0;i<settings.teams;i++){html+=`<tr><th title="${escapeHTML(displayName(i))}">${i+1}</th>`;for(let j=0;j<settings.teams;j++){let x=m[i][j];html+=`<td class="${i===j?'zero':x===0?'zero':x===1?'one':x===2?'two':'many'}" title="${escapeHTML(displayName(i))} / ${escapeHTML(displayName(j))}">${i===j?'—':x}</td>`}html+='</tr>'}html+='</tbody></table>';$('matrix').innerHTML=html}
@@ -244,7 +269,7 @@ function restore(data){
   const audit=auditSchedule(data.season,c);
   if(!audit.valid)throw Error('Schedule validation failed: '+audit.errors[0]);
  }
- settings=data.season?c:null;season=data.season||null;names=data.names.slice();
+ settings=data.season?c:null;season=data.season||null;names=data.names.slice();nameHistory=names.slice();
  $('teamCount').value=c.teams;$('days').value=c.days;$('boards').value=c.boards;$('weeks').value=c.weeks;
  $('startDate').value=c.startDate||'';$('dayNames').value=(c.dayNames||[]).join(', ');
  renderNames();capacity();if(season){render();showGenerateStatus('Saved season restored: '+season.length+' weeks.');}else{$('results').classList.add('hidden');$('generateStatus').classList.add('hidden');}
@@ -252,9 +277,9 @@ function restore(data){
 }
 function csvCell(s){return '"'+String(s).replace(/"/g,'""')+'"'}
 function exportCSV(){if(!season)return;const rows=[['Week','Night','Date','Round','Board','Team A','Team B']];for(const w of season)for(const nt of w.nights)for(let r=0;r<nt.rounds.length;r++)for(const g of nt.rounds[r])rows.push([w.week,dayLabel(nt.day),dateLabel(w.week,nt.day),r+1,g.board,displayName(g.a),displayName(g.b)]);download(rows.map(r=>r.map(csvCell).join(',')).join('\r\n'),'dart-league-schedule.csv','text/csv;charset=utf-8')}
-$('teamCount').addEventListener('input',()=>{syncNames();markChanged(true);refreshLeagueUI()});
+$('teamCount').addEventListener('input',()=>{const n=Number($('teamCount').value);if(Number.isInteger(n)&&n>=2&&n<=80&&n%2){syncNames();markChanged(true);refreshLeagueUI()}else capacity()});
 ['days','boards','weeks','startDate','dayNames'].forEach(id=>$(id).addEventListener('input',()=>{capacity();markChanged(true)}));
-$('resetNames').addEventListener('click',()=>{names=names.map((_,i)=>`Team ${i+1}`);renderNames();markChanged(false)});
+$('resetNames').addEventListener('click',()=>{names=names.map((_,i)=>`Team ${i+1}`);nameHistory=names.slice();renderNames();markChanged(false)});
 $('generate').addEventListener('click',()=>{
  syncNames();const c=config(),error=totalLeagueTeams()>MAX_COMBINED_TEAMS?`Both leagues together may have no more than ${MAX_COMBINED_TEAMS} teams. Please reduce the team count.`:validate(c);
  if(error){markChanged(true);showGenerateStatus('Cannot generate schedule: '+error+' Current setup: '+c.teams+' teams, '+c.days+' nights per week, '+c.boards+' boards per night.',true);$('generateStatus').scrollIntoView({behavior:'smooth',block:'center'});return}
